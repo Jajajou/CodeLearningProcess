@@ -1,3 +1,0 @@
-begin
-    write('hello');
-end.
