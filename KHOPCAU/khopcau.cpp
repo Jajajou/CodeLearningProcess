@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 #define name "khopcau" //pls dont forget your task's name
-#define maxn 101001
+#define maxn int(1e5) + 15
 #define cut cout << endl
 #define ll long long
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
@@ -21,13 +21,60 @@ const void IO()
     Fout(name);
 }
 using namespace std;
+int n(0), m(0), low[maxn] = {}, num[maxn] = {}, cnt(0);
+vector<int> G[maxn];
 
 void read()
 {
+    cin >> n >> m;
+    int x(0), y(0);
+    while (m--)
+    {
+        cin >> x >> y;
+        G[x].push_back(y);
+        G[y].push_back(x);
+    }
+}
+
+int criticalEdge(0), criticalNode(0), CriticalNode[maxn] = {}, childNode(0);
+vector<pair<int, int>> CriticalEdge;
+void visit(int u, int cp)
+{
+    childNode = 0;
+    low[u] = num[u] = ++cnt;
+    for (int v : G[u])
+        if (v - cp)
+        {
+            if (!num[v])
+            {
+                ++childNode;
+                visit(v, u);
+                low[u] = min(low[u], low[v]);
+                if (low[v] >= num[v])
+                    ++criticalEdge,
+                        CriticalEdge.push_back(make_pair(v, u));
+                if (u == cp && childNode >= 2 || u - cp && low[v] >= num[u])
+                {
+                    CriticalNode[++criticalNode] = u;
+                }
+            }
+            else
+                low[u] = min(low[u], num[v]);
+        }
 }
 
 void solve()
 {
+    forup(i, 1, n) if (!num[i]) visit(i, i);
+    cout << criticalNode << " " << criticalEdge << endl;
+    forup(i, 1, criticalNode)
+    {
+        cout << CriticalNode[i] << endl;
+    }
+    for (pair<int, int> x : CriticalEdge)
+    {
+        cout << x.first << " " << x.second << endl;
+    }
 }
 
 int main()
