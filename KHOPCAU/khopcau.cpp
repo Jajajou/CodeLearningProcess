@@ -36,26 +36,27 @@ void read()
     }
 }
 
-int criticalEdge(0), criticalNode(0), CriticalNode[maxn] = {}, childNode(0);
+int criticalEdge(0), criticalNode(0), CriticalNode[maxn] = {}, checkedNode[maxn] = {};
 vector<pair<int, int>> CriticalEdge;
 void visit(int u, int cp)
 {
-    childNode = 0;
+    int childNode(0);
     low[u] = num[u] = ++cnt;
     for (int v : G[u])
         if (v - cp)
         {
             if (!num[v])
             {
-                ++childNode;
                 visit(v, u);
+                ++childNode;
                 low[u] = min(low[u], low[v]);
                 if (low[v] >= num[v])
                     ++criticalEdge,
                         CriticalEdge.push_back(make_pair(v, u));
-                if (u == cp && childNode >= 2 || u - cp && low[v] >= num[u])
+                if (u == cp and childNode >= 2 || u - cp and low[v] >= num[u])
                 {
-                    CriticalNode[++criticalNode] = u;
+                    if (!checkedNode[u])
+                        checkedNode[u] = CriticalNode[++criticalNode] = u;
                 }
             }
             else
