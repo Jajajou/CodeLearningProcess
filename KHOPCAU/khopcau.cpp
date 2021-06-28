@@ -50,7 +50,7 @@ void visit(int u, int cp)
                 visit(v, u);
                 ++childNode;
                 low[u] = min(low[u], low[v]);
-                if (low[v] >= num[v])
+                if (low[v] == num[v])
                     ++criticalEdge,
                         CriticalEdge.push_back(make_pair(v, u));
                 if (u == cp and childNode >= 2 || u - cp and low[v] >= num[u])
