@@ -36,7 +36,9 @@ int solve()
 int main()
 {
     boost();
-    // IO();
+#ifndef ONLINE_JUDGE
+    IO();
+#endif
     int t(0);
     cin >> t;
     while (t--)
