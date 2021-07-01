@@ -22,19 +22,43 @@ const void IO()
 }
 using namespace std;
 
-void read()
-{
-}
-
 void solve()
 {
+    char c;
+    int x1(0), y1(0), x2(0), y2(0);
+    cin >> c >> x1 >> y1 >> x2 >> y2;
+    if ((x1 & 1) && (y1 & 1))
+    {
+        cout << "draw\n";
+        return;
+    }
+    if (x1 == 2 && y1 == 2)
+    {
+        if ((x2 & 1) && (y2 & 1))
+        {
+            cout << "draw\n";
+            return;
+        }
+        else
+        {
+            cout << c << endl;
+            return;
+        }
+    }
+    cout << "draw\n";
 }
 
 int main()
 {
     boost();
+#ifndef ONLINE_JUDGE
     IO();
-    read();
-    solve();
+#endif
+    int t(0);
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
     return 0;
 }
