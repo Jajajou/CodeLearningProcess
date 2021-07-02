@@ -25,21 +25,22 @@ const void IO()
 }
 using namespace std;
 
-void read()
-{
-}
-
-void solve()
-{
-}
-
 int main()
 {
     boost();
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    read();
-    solve();
+    int n(0), m(0), r(0);
+    cin >> n >> m >> r;
+
+    vector<int> milksaCow, rentPrice;
+    vector<pair<int, int>> milkTradePrice;
+    for (int i(0), x(0); i < n && cin >> x; ++i)
+        milksaCow.pb(x);
+    for (int i(0), x(0), y(0); i < m && cin >> x >> y; ++i)
+        milkTradePrice.pb({x, y});
+    for (int i(0), x(0); i < n && cin >> x; ++i)
+        rentPrice.pb(x);
     return 0;
 }

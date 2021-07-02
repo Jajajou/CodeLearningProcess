@@ -13,10 +13,10 @@
 #define fordown(type, i, start, end) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
 #define allVi(x) x.begin(), x.end()
 #define allArr(x, start, end) x, x + begin, x + end + begin
+#define pb push_back
 
 typedef long long ll;
 typedef unsigned long long ull;
-typedef pair<int, int> pii;
 
 const void IO()
 {
