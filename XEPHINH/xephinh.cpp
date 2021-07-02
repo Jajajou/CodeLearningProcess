@@ -3,8 +3,8 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
-#define name "choido" //pls dont forget your task's name
-#define maxn int(1e9) + 7
+#define name "xephinh" //pls dont forget your task's name
+#define maxn 101001
 #define cut cout << endl
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
 #define forup(i, start, end) for (int i = start; i <= end; ++i)
@@ -25,18 +25,11 @@ const void IO()
 }
 using namespace std;
 
-void solve()
-{
-    ull l(0), r(0), n(0);
-    cin >> l >> r >> n;
+ull tt(ull a, ull b, ull h) { return a * b * h; }
 
-    ull x(r - l + 1);
-    l = ((l % n == 0) ? l / n - 1 : l / n);
-    r = r / n;
-    ull y(r - l);
-    ull allPairsPossible(((x + 1) * x) / 2), allPairsUndivided(((y + 1) * y) / 2);
-    cout << allPairsPossible - allPairsUndivided << endl;
-}
+ull cv(ull a, ull b, ull h) { return 4 * (a + b + h); }
+
+ull dt(ull a, ull b, ull h) { return 2 * a * b + 2 * h * (a + b); }
 
 int main()
 {
@@ -48,7 +41,9 @@ int main()
     cin >> t;
     while (t--)
     {
-        solve();
+        ull a(0), b(0), h(0);
+        cin >> a >> b >> h;
+        cout << tt(a, b, h) << ' ' << cv(a, b, h) << ' ' << dt(a, b, h) << "\n";
     }
     return 0;
 }

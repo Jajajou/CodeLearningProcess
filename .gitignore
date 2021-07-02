@@ -1,0 +1,8 @@
+
+.out
+CADO/cado.inp
+*.out
+*.exe
+*.exe
+*.inp
+CHOIDO/choido.exe

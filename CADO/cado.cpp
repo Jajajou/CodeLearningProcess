@@ -3,7 +3,7 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
-#define name "choido" //pls dont forget your task's name
+#define name "cado" //pls dont forget your task's name
 #define maxn int(1e9) + 7
 #define cut cout << endl
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
@@ -25,30 +25,31 @@ const void IO()
 }
 using namespace std;
 
-void solve()
-{
-    ull l(0), r(0), n(0);
-    cin >> l >> r >> n;
-
-    ull x(r - l + 1);
-    l = ((l % n == 0) ? l / n - 1 : l / n);
-    r = r / n;
-    ull y(r - l);
-    ull allPairsPossible(((x + 1) * x) / 2), allPairsUndivided(((y + 1) * y) / 2);
-    cout << allPairsPossible - allPairsUndivided << endl;
-}
-
 int main()
 {
     boost();
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int t(0);
-    cin >> t;
-    while (t--)
+    int n(0), k(0);
+    cin >> n >> k;
+
+    int f[n + 1][k + 1] = {{0}}, a[n + 1] = {}, s[n + 1] = {};
+    forup(i, 1, n)
     {
-        solve();
+        cin >> a[i];
+        f[i][1] = a[i];
+        s[i] = s[i - 1] + f[i][1];
     }
+    forup(j, 2, k) forup(i, 1, n)
+    {
+        f[i][j] = a[i] * (s[n] - s[i]);
+        s[i] = s[i - 1] + f[i][j];
+    }
+
+    int res(0);
+    forup(i, 1, n) res += f[i][k];
+    cout << res << endl;
+
     return 0;
 }
