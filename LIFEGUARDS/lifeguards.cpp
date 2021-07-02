@@ -3,7 +3,7 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
-#define name "" //pls dont forget your task's name
+#define name "lifeguards" //pls dont forget your task's name
 #define maxn 101001
 #define cut cout << endl
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
@@ -25,21 +25,13 @@ const void IO()
 }
 using namespace std;
 
-void read()
-{
-}
-
-void solve()
-{
-}
-
 int main()
 {
     boost();
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    read();
-    solve();
+    int n(0);
+    cin >> n;
     return 0;
 }
