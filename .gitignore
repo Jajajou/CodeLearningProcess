@@ -3,6 +3,6 @@
 CADO/cado.inp
 *.out
 *.exe
-*.exe
 *.inp
+*.in
 CHOIDO/choido.exe
