@@ -29,6 +29,13 @@ vector<int> G[maxn];
 
 void read()
 {
+    cin >> n >> x;
+    int u(0), v(0);
+    while (cin >> u >> v)
+    {
+        G[u].pb(v);
+        G[v].pb(u);
+    }
 }
 
 void solve()
