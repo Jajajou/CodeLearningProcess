@@ -21,50 +21,51 @@ const void IO()
     Fout(name);
 }
 using namespace std;
-int n(0), m(0), f[maxn] = {}, res(0);
-vector<int> G[maxn];
+int n, m, x, y, Low[int(1e5)], Num[int(1e5)], k = 0, cha[int(1e5)], child[int(1e5)];
+vector<vector<int>> a(int(2e4) + 1);
+long long res = 0, f[int(1e5) + 1];
 
-void read()
+int cnt = 0, mlt[int(1e5) + 1];
+void dfs(int u)
 {
-    int u(0), v(0);
-    cin >> n >> m;
-    while (m--)
-    {
-        cin >> u >> v;
-        G[u].push_back(v);
-        G[v].push_back(u);
-    }
-}
-
-int low[maxn] = {}, num[maxn] = {}, cnt(0), path[maxn] = {}, components[maxn] = {}, k(0);
-bool criticalNode[maxn] = {};
-void visit(int u)
-{
-    components[u] = k;
+    mlt[u] = k;
+    cnt++;
+    Low[u] = Num[u] = cnt;
     f[u] = 1;
-    low[u] = num[u] = ++cnt;
-    for (int v : G[u])
+    for (int i = 0; i < a[u].size(); i++)
     {
-        if (!num[v])
+        int v = a[u][i];
+        if (Num[v])
         {
-            path[v] = u;
-            visit(v);
-            f[u] += f[v];
-            low[u] = min(low[u], low[v]);
+            if (cha[u] != v)
+                Low[u] = min(Low[u], Num[v]);
         }
-        else if (path[u] != v)
-            low[u] = min(low[u], num[v]);
+        else
+        {
+            cha[v] = u;
+            child[u]++;
+            dfs(v);
+            Low[u] = min(Low[v], Low[u]);
+            f[u] += f[v];
+        }
     }
 }
 
-void solve()
+bool Node[int(1e5)];
+void findnode()
 {
-    forup(i, 1, n)
+    for (int i = 1; i <= n; i++)
     {
-        if (!num[i])
+        if (i != cha[i])
         {
-            ++k;
-            visit(i);
+            int u = cha[i];
+            if (Low[i] >= Num[u])
+            {
+                if ((Num[u] == 1) && (child[u] < 2))
+                    Node[u] = 0;
+                else
+                    Node[u] = 1;
+            }
         }
     }
 }
@@ -73,7 +74,41 @@ int main()
 {
     boost();
     IO();
-    read();
-    solve();
+    cin >> n >> m;
+    for (int i = 1; i <= m; i++)
+    {
+        cin >> x >> y;
+        a[x].push_back(y);
+        a[y].push_back(x);
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        if (!Num[i])
+        {
+            k = i;
+            dfs(i);
+        }
+    }
+    findnode();
+    for (int i = 1; i <= n; i++)
+    {
+        if (Node[i])
+        {
+            long long tmp = 0, d = 0;
+            for (int j = 0; j < a[i].size(); j++)
+            {
+                int v = a[i][j];
+                if ((cha[v] == i) && (Low[v] >= Num[i]))
+                {
+                    d += f[v];
+                    tmp += f[v] * (f[mlt[i]] - f[v] - 1);
+                }
+            }
+            tmp += (f[mlt[i]] - d - 1) * (d);
+            tmp /= 2;
+            res += tmp;
+        }
+    }
+    cout << fixed << setprecision(2) << float(res) / n;
     return 0;
 }
