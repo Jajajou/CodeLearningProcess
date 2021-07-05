@@ -38,8 +38,35 @@ void read()
     }
 }
 
+int depth[maxn] = {}, path[maxn] = {}, cp(0), furthest(0);
+void dfs(int u)
+{
+    for (int v : G[u])
+    {
+        if (!path[v])
+        {
+            path[v] = u;
+            depth[v] += depth[u] + 1;
+            if (depth[v] > furthest)
+            {
+                furthest = depth[v];
+                cp = v;
+            }
+            dfs(v);
+        }
+    }
+}
+
+int findRoot(int u) { return u == path[u] ? path[u] : findRoot(path[u]); }
+
 void solve()
 {
+    path[x] = x;
+    dfs(x);
+    forup(int, i, 1, n) path[i] = (depth[i] == 1) ? i : path[i];
+    int res(0), k(findRoot(cp));
+    forup(int, i, 1, n) res = (k != findRoot(i)) ? max(res, depth[cp] + depth[i]) : res;
+    cout << res + 1;
 }
 
 int main()
