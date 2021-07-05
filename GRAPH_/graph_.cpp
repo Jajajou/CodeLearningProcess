@@ -68,7 +68,6 @@ void visit(int u, int cp)
 void solve()
 {
     forup(int, u, 1, n) if (!num[u]) visit(u, u);
-    // forup(int, u, 1, n) cout << u << ' ' << num[u] << ' ' << low[u] << endl;
     cout << criticalNode << ' ' << criticalEdge;
 }
 

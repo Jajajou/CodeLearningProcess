@@ -10,7 +10,7 @@
 #define Fin(name) freopen(name ".inp", "r", stdin)
 #define Fout(name) freopen(name ".out", "w", stdout)
 #define forup(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i <= i##_end; ++i)
-#define fordown(type, i, start, end) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
+#define fordown(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
 #define allVi(x) x.begin(), x.end()
 #define allArr(x, start, end) x, x + begin, x + end + begin
 #define pb push_back

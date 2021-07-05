@@ -5,4 +5,7 @@ CADO/cado.inp
 *.exe
 *.inp
 *.in
+*.png
+*.jpg
+*.pdf
 CHOIDO/choido.exe
