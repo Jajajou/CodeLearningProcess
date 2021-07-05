@@ -53,9 +53,8 @@ void dfs(int u)
 
 void solve()
 {
-    degree[1] = 1;
     dfs(1);
-    forup(int, i, 1, n) cout << degree[i] << endl;
+    forup(int, i, 1, n) cout << degree[i] + 1 << endl;
 }
 
 int main()
