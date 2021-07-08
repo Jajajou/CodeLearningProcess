@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 #define name "latgach4" //pls dont forget your task's name
-#define maxn 101001
+#define maxn 111539786
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -31,13 +31,29 @@ const void IO()
 }
 using namespace std;
 
-void read()
+class matrix
 {
-}
-
-void solve()
-{
-}
+public:
+    ll res[2][2];
+    matrix() { res[0][0] = res[1][0] = res[0][1] = 1, res[1][1] = 0; }
+    matrix(ll a, ll b, ll c, ll d) { res[0][0] = a, res[0][1] = b, res[1][0] = c, res[1][1] = d; }
+    matrix operator%(const ll &k) { return matrix(res[0][0] % k, res[0][1] % k, res[1][0] % k, res[1][1] % k); }
+    matrix operator*(const matrix &m)
+    {
+        return matrix(res[0][0] * m.res[0][0] % maxn + res[0][1] * m.res[1][0] % maxn,
+                      res[0][0] * m.res[0][1] % maxn + res[0][1] * m.res[1][1] % maxn,
+                      res[1][0] * m.res[0][0] % maxn + res[1][1] * m.res[1][0] % maxn,
+                      res[1][0] * m.res[0][1] % maxn + res[1][1] * m.res[1][1] % maxn) %
+               maxn;
+    }
+    matrix operator^=(const int &n)
+    {
+        if (n == 1)
+            return matrix();
+        matrix res = *this ^= (n >> 1);
+        return n & 1 ? res * res * matrix() : res * res;
+    }
+};
 
 int main()
 {
@@ -45,7 +61,13 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    read();
-    solve();
+    int q(0);
+    cin >> q;
+    while (q--)
+    {
+        int n(0);
+        cin >> n;
+        cout << (matrix() ^= n).res[0][0] << "\n";
+    }
     return 0;
 }
