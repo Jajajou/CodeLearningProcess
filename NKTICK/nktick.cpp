@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 #define name "nktick" //pls dont forget your task's name
-#define maxn 101001
+#define maxn 60000
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -30,13 +30,24 @@ const void IO()
     Fout(name);
 }
 using namespace std;
+int n(0);
+int *ar, *arr, *dp;
 
 void read()
 {
+    cin >> n;
+    ar = new int[n + 1];
+    arr = new int[n + 2];
+    forup(int, i, 1, n) cin >> ar[i];
+    forup(int, i, 2, n) cin >> arr[i];
 }
 
 void solve()
 {
+    dp = new int[n + 1];
+    dp[0] = 0, dp[1] = ar[1];
+    forup(int, i, 2, n) dp[i] = min(ar[i] + dp[i - 1], arr[i] + dp[i - 2]);
+    cout << dp[n];
 }
 
 int main()
@@ -47,5 +58,6 @@ int main()
 #endif
     read();
     solve();
+    delete[] dp, ar, arr;
     return 0;
 }
