@@ -50,9 +50,10 @@ int main()
 
     forup(int, i, 1, m) forup(int, j, 1, n) cin >> arr[i][j];
     forup(int, i, 1, m) dp[i][1] = arr[i][1];
-    forup(int, j, 2, n) dp[1][j] = arr[1][j] + dp[1][j - 1];
-    forup(int, j, 2, n) forup(int, i, 2, m)
+    forup(int, j, 2, n) forup(int, i, 1, m)
+    {
         dp[i][j] = arr[i][j] + max({o(i, j - 1), o(i - 1, j - 1), o(i + 1, j - 1)});
+    }
     cout << [&]()
     {
         int res(INT_MIN);
