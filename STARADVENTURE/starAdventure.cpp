@@ -96,7 +96,7 @@ class beatTheGame
                 {
                     int res(0);
                     forup(int, i, 0, endPos_1) forup(int, j, endPos_1 + 1, endPos_2) forup(int, k, endPos_2 + 1, endPos_3)
-                        res = max(res, dp[i][j][k] + levelDataSum[level][i][endPos_1] + levelDataSum[level][j][endPos_2] + levelDataSum[level][j][endPos_3]);
+                        res = max(res, dp[i][j][k] + levelDataSum[level][i][endPos_1] + levelDataSum[level][j][endPos_2] + levelDataSum[level][k][endPos_3]);
                     return res;
                 }(level, i, j, k);
             }
