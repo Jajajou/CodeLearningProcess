@@ -4,49 +4,49 @@
 */
 #include <bits/stdc++.h>
 #define name "bones" //pls dont forget your task's name
-#define maxn 101001
-#define ll long long
+#define maxn 100
+#define pri_q priority_queue
+#define pf push_front
+#define pb push_back
+#define popb pop_back
+#define popf pop_front
+#define fi first
+#define se second
+#define cut cout << endl
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
-#define forup(i, start, end) for (int i = start; i <= end; ++i)
-#define forupChar(i, start, end) for (char i = start; i <= end; ++i)
-#define fordown(i, start, end) for (int i = start; i >= end; --i)
-#define fordownChar(i, start, end) for (char i = start; i >= end; --i)
 #define Fin(name) freopen(name ".inp", "r", stdin)
 #define Fout(name) freopen(name ".out", "w", stdout)
+#define forup(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i <= i##_end; ++i)
+#define fordown(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
+#define allVi(x) x.begin(), x.end()
+#define allArr(x, start, end) x, x + begin, x + end + begin
+
+typedef long long ll;
+typedef unsigned long long ull;
+
+const void IO()
+{
+    Fin(name);
+    Fout(name);
+}
 using namespace std;
-int s1(0), s2(0), s3(0);
-
-void read()
-{
-    cin >> s1 >> s2 >> s3;
-}
-
-void solve()
-{
-    int res(0), f[81] = {}, cp(0);
-    fordown(x, s1, 1)
-    {
-        fordown(y, s2, 1)
-        {
-            fordown(z, s3, 1)
-            {
-                ++f[x + y + z];
-                if (f[x + y + z] >= cp)
-                {
-                    res = x + y + z;
-                    cp = f[x + y + z];
-                }
-            }
-        }
-    }
-    cout << res;
-}
 
 int main()
 {
     boost();
-    Fin(name);
-    Fout(name);
-    read();
-    solve();
+#ifndef ONLINE_JUDGE
+    IO();
+#endif
+    int x(0), y(0), z(0);
+    cin >> x >> y >> z;
+    int sum[x + y + z], res(0), cpSum(0);
+    forup(int, i, 3, x + y + z) sum[i] = 0;
+
+    forup(int, xx, 1, x) forup(int, yy, 1, y) forup(int, zz, 1, z)
+    {
+        ++sum[xx + yy + zz];
+        res = (sum[xx + yy + zz] > cpSum) ? cpSum = sum[xx + yy + zz], xx + yy + zz : res;
+    }
+    cout << res;
+    return 0;
 }
