@@ -3,6 +3,7 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
+#pragma GCC optimize("Ofast")
 #define name "lfib " //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
