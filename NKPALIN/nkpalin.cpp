@@ -31,21 +31,22 @@ const void IO()
 }
 using namespace std;
 
-void read()
-{
-}
-
-void solve()
-{
-}
-
 int main()
 {
     boost();
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    read();
-    solve();
+    string s("");
+    cin >> s;
+    int n(s.size());
+    string dp[n >> 1];
+    forup(int, i, 0, n >> 1) fordown(int, j, n - i - 1, n >> 1) if (s[i] == s[j])
+    {
+        dp[i] = dp[i - 1] + s[i];
+        break;
+    }
+    else dp[i] = dp[i - 1];
+    cout << dp[n >> 1];
     return 0;
 }

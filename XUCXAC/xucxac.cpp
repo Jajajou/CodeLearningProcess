@@ -3,7 +3,7 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
-#define name "test" //pls dont forget your task's name
+#define name "xucxac" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -37,18 +37,11 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n(0);
-    cin >> n;
-    int dp[n + 1], res(0);
-    forup(int, i, 0, n) dp[i] = INT_MIN;
-    for (int i(0), x(0); cin >> x and i < n; ++i)
-    {
-        int p = lower_bound(dp, dp + res, x) - dp;
-        if (p == res)
-            ++res, dp[p] = x;
-        else
-            dp[p] = min(dp[p], x);
-    }
-    cout << res;
+    priority_queue<int, vector<int>, less<int>> a;
+
+    int arr[] = {2, 4, 6, 2, 5}, n(5), m(5);
+    for (int i = 0; i < m; ++i)
+        a.push(arr[i]);
+    cout << a.top();
     return 0;
 }

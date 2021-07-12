@@ -3,7 +3,7 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
-#define name "test" //pls dont forget your task's name
+#define name "syllable" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -30,6 +30,9 @@ const void IO()
     Fout(name);
 }
 using namespace std;
+string s;
+
+bool ok(char x) { return x == 'a' || x == 'e' || x == 'i' || x == 'o' || x == 'u'; }
 
 int main()
 {
@@ -37,18 +40,26 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n(0);
-    cin >> n;
-    int dp[n + 1], res(0);
-    forup(int, i, 0, n) dp[i] = INT_MIN;
-    for (int i(0), x(0); cin >> x and i < n; ++i)
+    int vowels(0), sLen(0);
+    cin >> s;
+    sLen = s.length();
+    for (int i = 0; i < sLen; i++)
     {
-        int p = lower_bound(dp, dp + res, x) - dp;
-        if (p == res)
-            ++res, dp[p] = x;
-        else
-            dp[p] = min(dp[p], x);
+        if (ok(s[i]))
+        {
+            ++vowels;
+            if (ok(s[i + 1]))
+            {
+                --vowels;
+            }
+        }
     }
-    cout << res;
+    cout << vowels << endl;
+    if (s[sLen - 1] == 'e' !ok(s[sLen - 2]) || !ok(s[sLen - 3])))
+        {
+            --vowels;
+            vowels += (vowels < 1);
+        }
+    cout << vowels;
     return 0;
 }

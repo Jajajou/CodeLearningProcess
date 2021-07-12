@@ -37,19 +37,21 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n(0), x(0), res(0);
+    int n(0);
     cin >> n;
-    int f[n] = {};
-    for (int i = 1; i <= n && cin >> x; ++i)
+
+    int res(0), x(0), dp[n + 1];
+    forup(int, i, 1, n)
     {
-        int p = lower_bound(f, f + res, x) - f;
+        cin >> x;
+        int p = lower_bound(dp, dp + res, x) - dp;
         if (p == res)
         {
             ++res;
-            f[p] = x;
+            dp[p] = x;
         }
         else
-            f[p] = min(f[p], x);
+            dp[p] = min(dp[p], x);
     }
     cout << res;
     return 0;

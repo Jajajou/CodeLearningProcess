@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 #define name "tachtinh" //pls dont forget your task's name
-#define maxn int(1e5)
+#define maxn int(2e5) + 25
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
