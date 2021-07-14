@@ -20,7 +20,15 @@
 #define fordown(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
 #define allVi(x) x.begin(), x.end()
 #define allArr(x, start, end) x, x + begin, x + end + begin
-
+template <class val>
+val mul(val a, val b, val mod)
+{
+    if (!b)
+        return 0;
+    if (!(b - 1))
+        return a;
+    return b & 1 ? (mul(a, b >> 1, mod) * 2 + a) % mod : (mul(a, b >> 1, mod) * 2) % mod;
+}
 typedef long long ll;
 typedef unsigned long long ull;
 
@@ -30,69 +38,70 @@ const void IO()
     Fout(name);
 }
 using namespace std;
-
-class matrixMul
+struct matrix
 {
-public:
-    int a, b, n, k, mod;
-    // ll arr[3][3], base[3][1];
+    ll res[3][3];
 
-    // matrixMul()
-    // {
-    //     for (int i(0); i < 3; ++i)
-    //         arr[0][i] = 1;
-    //     for (int i(1); i < 3; ++i)
-    //         arr[i][i - 1] = 1;
-    // }
-
-    // matrixMul(int tmp[][3])
-    // {
-    //     forup(int, i, 0, 2) forup(int, j, 0, 2) arr[i][j] = tmp[i][j];
-    // }
-
-    // matrixMul operator*(const matrixMul &m)
-    // {
-    //     int res[3][3];
-    //     for (int i = 0; i < 3; ++i)
-    //     {
-    //         for (int j = 0; j < 3; ++j)
-    //             res[i][j] = [&]()
-    //             {
-    //                 ll cp(0);
-    //                 for (int k = 0; k < 3; ++k)
-    //                     cp = ((cp % mod) + ((arr[i][k] % mod) * (m.arr[k][j] % mod) % mod)) % mod;
-    //                 return cp;
-    //             }();
-    //     }
-    //     return matrixMul(res);
-    // }
-
-    // matrixMul operator^=(const ll &n)
-    // {
-    //     if (n <= 1)
-    //         return matrixMul();
-    //     matrixMul res = *this ^= (n >> 1);
-    //     return n & 1 ? res * res * matrixMul() : res * res;
-    // }
-
-    // ll lfib(int n)
-    // {
-    //     if (n < 3 && n)
-    //         return n == 1 ? a % mod : b % mod;
-    //     int x = (matrixMul() ^= (n - 1)).arr[0][0], y = (matrixMul() ^= (n - 1)).arr[0][1], z = (matrixMul() ^= (n - 1)).arr[0][2];
-    //     return (((x % mod) * (base[0][0] % mod) % mod) + ((y % mod) * (base[1][0] % mod) % mod) + ((z % mod) * (base[2][0] % mod) % mod) % mod);
-    // }
-
-    void solve()
+    matrix()
     {
-        cin >> a >> b >> n >> k >> mod;
-        cout << k << endl;
-        // base[0][0] = a % mod, base[0][1] = b % mod, base[0][2] = 1;
-        // ll res(((lfib(n + 2) % mod) - (lfib(2) % mod) - n % mod + mod * mod) % mod);
-        // if (k == 1)
-        //     return (void)(cout << res << endl);
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j)
+                res[i][j] = 0LL;
+        for (int i = 0; i < 3; ++i)
+            res[1][i] = 1LL;
+        res[0][1] = res[2][2] = 1LL;
+    }
+
+    matrix(ll tmp[][3])
+    {
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j)
+                res[i][j] = tmp[i][j];
+    }
+
+    matrix operator%(const ll &k)
+    {
+        ll tmp[3][3];
+        for (int i = 0; i < 3; ++i)
+            for (int j = 0; j < 3; ++j)
+                tmp[i][j] = res[i][j] % k;
+        return matrix(tmp);
     }
 };
+ll a(0), b(0), n(0), k(0), mod(0);
+
+matrix operator*(matrix a, matrix b)
+{
+    ll res[3][3];
+    for (int i = 0; i < 3; ++i)
+    {
+        for (int j = 0; j < 3; ++j)
+            res[i][j] = [&]()
+            {
+                ll cp(0);
+                for (int k = 0; k < 3; ++k)
+                    cp = ((cp % mod) + (mul(a.res[i][k] % mod, b.res[k][j] % mod, mod) % mod) % mod);
+                return cp;
+            }();
+    }
+    return matrix(res) % mod;
+}
+
+matrix operator^(matrix A, ll n)
+{
+    if (n <= 1)
+        return A % mod;
+    matrix res = A ^ (n >> 1);
+    return n & 1 ? ((res % mod) * (res % mod) * (A % mod)) % mod : (res % mod) * (res % mod);
+}
+
+ll lfib(int n)
+{
+    if (n && n < 3)
+        return n == 1 ? a % mod : b % mod;
+    matrix ans = matrix() ^ (n - 1);
+    return ((mul(ans.res[0][0] % mod, a % mod, mod) % mod) + (mul(ans.res[0][1] % mod, b % mod, mod) % mod) + (ans.res[0][2] % mod)) % mod;
+}
 
 int main()
 {
@@ -103,6 +112,10 @@ int main()
     int t(0);
     cin >> t;
     while (t--)
-        matrixMul().solve();
+    {
+        cin >> a >> b >> n >> k >> mod;
+        ll res(((lfib(n + 2) % mod) - (lfib(2) % mod) - (n % mod) + (mod << 1)) % mod);
+        cout << (((k == 1) ? res % mod : ((((a % mod) * (a % mod)) % mod) + (((lfib(n) % mod) * (lfib(n + 1) % mod)) % mod) - ((a % mod) * (b % mod)) - (res % mod) + (a % mod) + mod * mod) % mod)) << "\n";
+    }
     return 0;
 }
