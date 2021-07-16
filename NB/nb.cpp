@@ -30,14 +30,53 @@ const void IO()
     Fout(name);
 }
 using namespace std;
+int n(0);
 
-void read()
+class matrix
 {
-}
+public:
+    int res[2][2];
 
-void solve()
-{
-}
+    matrix()
+    {
+        res[0][0] = 6, res[0][1] = -3;
+        res[1][0] = 1, res[1][1] = 0;
+    }
+
+    matrix(int tmp[][2]) { forup(int, i, 0, 1) forup(int, j, 0, 1) res[i][j] = tmp[i][j]; }
+
+    matrix operator%(const ll &k)
+    {
+        int tmp[2][2];
+        for (int i = 0; i < 2; ++i)
+            for (int j = 0; j < 2; ++j)
+                tmp[i][j] = res[i][j] % k;
+        return matrix(tmp);
+    }
+
+    matrix operator*(const matrix &m)
+    {
+        int tmp[2][2];
+        forup(int, i, 0, 1) forup(int, j, 0, 1)
+        {
+            tmp[i][j] = [&]()
+            {
+                int cp(0);
+                forup(int, k, 0, 1) cp = (cp % 1000 + (((res[i][k] % 1000) * (m.res[k][j] % 1000)) % 1000) + 1000 * 1000) % 1000;
+                return cp;
+            }();
+        }
+        return matrix(tmp) % 1000;
+    }
+
+    matrix operator^=(const int &n)
+    {
+        if (n <= 1)
+            return matrix();
+        matrix res = *this ^= (n >> 1);
+        return n & 1 ? res * res * matrix() : res * res;
+    }
+};
 
 int main()
 {
@@ -45,7 +84,13 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    read();
-    solve();
+    cin >> n;
+    matrix tmp = matrix() ^= (--n);
+    int tmpRes(((tmp.res[0][0] % 1000 * 6) % 1000) + ((tmp.res[0][1] % 1000 * 2) % 1000) % 1000);
+    tmpRes = (tmpRes - 1) % 1000;
+    string res(to_string((tmpRes - 1) % 1000));
+    while (res.length() < 3)
+        res = "0" + res;
+    cout << res;
     return 0;
 }
