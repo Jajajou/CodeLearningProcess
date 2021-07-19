@@ -21,6 +21,11 @@
 #define allVi(x) x.begin(), x.end()
 #define allArr(x, start, end) x, x + begin, x + end + begin
 
+template <class val>
+val getBit(val x, val pos) { return x >> (pos - 1) & 1; }
+template <class val>
+val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << (pos - 1)) : inp &= ~(1 << (pos - 1)); }
+
 typedef long long ll;
 typedef unsigned long long ull;
 
@@ -37,18 +42,10 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n(0);
-    cin >> n;
-    int dp[n + 1], res(0);
-    forup(int, i, 0, n) dp[i] = INT_MIN;
-    for (int i(0), x(0); cin >> x and i < n; ++i)
-    {
-        int p = lower_bound(dp, dp + res, x) - dp;
-        if (p == res)
-            ++res, dp[p] = x;
-        else
-            dp[p] = min(dp[p], x);
-    }
-    cout << res;
+    int a(4);
+    for (int i = 0; i < 8; i++)
+        if (getBit(a, i))
+            cout << i << endl;
+    cout << __builtin_ctz(a);
     return 0;
 }

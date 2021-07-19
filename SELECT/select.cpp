@@ -3,7 +3,7 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
-#define name "ConsecutiveSubsequence" //pls dont forget your task's name
+#define name "select" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -21,6 +21,11 @@
 #define allVi(x) x.begin(), x.end()
 #define allArr(x, start, end) x, x + begin, x + end + begin
 
+template <class val>
+val getBit(val x, val pos) { return x >> (pos - 1) & 1; }
+template <class val>
+val setBitVal(val bit, val x, val &inp) { return (x == 1) ? inp |= (1 << (pos - 1)) : inp &= ~(1 << (pos - 1)); }
+
 typedef long long ll;
 typedef unsigned long long ull;
 
@@ -31,29 +36,21 @@ const void IO()
 }
 using namespace std;
 
+void read()
+{
+}
+
+void solve()
+{
+}
+
 int main()
 {
     boost();
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n(0);
-    cin >> n;
-
-    int res(0), x(0), dp[n + 1];
-    forup(int, i, 1, n)
-    {
-        cin >> x;
-        int p = lower_bound(dp, dp + res, x) - dp;
-        if (p == res)
-        {
-            ++res;
-            dp[p] = x;
-        }
-        else
-            dp[p] = min(dp[p], x);
-    }
-    cout << res << endl;
-    forup(int, i, 0, res - 1) cout << dp[i] << " ";
+    read();
+    solve();
     return 0;
 }

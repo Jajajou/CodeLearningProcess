@@ -21,6 +21,11 @@
 #define allVi(x) x.begin(), x.end()
 #define allArr(x, start, end) x, x + begin, x + end + begin
 
+template <class val>
+val getBit(val x, val pos) { return x >> (pos - 1) & 1; }
+template <class val>
+val setBitVal(val bit, val x, val &inp) { return (x == 1) ? inp |= (1 << (pos - 1)) : inp &= ~(1 << (pos - 1)); }
+
 typedef long long ll;
 typedef unsigned long long ull;
 

@@ -5,45 +5,49 @@
 #include <bits/stdc++.h>
 #define name "cses" //pls dont forget your task's name
 #define maxn 101001
+#define pri_q priority_queue
+#define pf push_front
+#define pb push_back
+#define popb pop_back
+#define popf pop_front
+#define fi first
+#define se second
 #define cut cout << endl
-#define ll long long
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
-#define forup(i, start, end) for (int i = start; i <= end; ++i)
-#define forupIn(i, start, end, in) for (int i = start; i <= end && cin >> in; ++i)
-#define forupChar(i, start, end) for (char i = start; i <= end; ++i)
-#define fordown(i, start, end) for (int i = start; i >= end; --i)
-#define fordownChar(i, start, end) for (char i = start; i >= end; --i)
 #define Fin(name) freopen(name ".inp", "r", stdin)
 #define Fout(name) freopen(name ".out", "w", stdout)
+#define forup(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i <= i##_end; ++i)
+#define fordown(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
+#define allVi(x) x.begin(), x.end()
+#define allArr(x, start, end) x, x + begin, x + end + begin
+
+typedef long long ll;
+typedef unsigned long long ull;
+
 const void IO()
 {
     Fin(name);
     Fout(name);
 }
 using namespace std;
-ll f[1001][1001];
 
 int main()
 {
-
     boost();
-    // IO();
-    int n(0), q(0);
-    cin >> n >> q;
-
-    char c(' ');
-    forup(i, 1, n) forup(j, 1, n)
+#ifndef ONLINE_JUDGE
+    IO();
+#endif
+    int n(0), res(0);
+    cin >> n;
+    vector<int> dp;
+    for (int i(0), x(0); i < n and cin >> x; ++i)
     {
-        cin >> c;
-        f[i][j] = f[i - 1][j] + f[i][j - 1] - f[i - 1][j - 1] + (c == '*');
+        vector<int>::iterator p = upper_bound(dp.begin(), dp.end(), x);
+        if (p != dp.end())
+            *p = x;
+        else
+            ++res, dp.pb(x);
     }
-
-    int x1(0), y1(0), x2(0), y2(0);
-    while (q--)
-    {
-        cin >> x1 >> y1 >> x2 >> y2;
-        cout << f[x2][y2] - f[x2][y1 - 1] - f[x1 - 1][y2] + f[x1 - 1][y1 - 1] << endl;
-    }
-
+    cout << res;
     return 0;
 }
