@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 #define name "select" //pls dont forget your task's name
-#define maxn 101001
+#define maxn 20
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -22,9 +22,9 @@
 #define allArr(x, start, end) x, x + begin, x + end + begin
 
 template <class val>
-val getBit(val x, val pos) { return x >> (pos - 1) & 1; }
+val getBit(val x, val pos) { return x >> pos & 1; }
 template <class val>
-val setBitVal(val bit, val x, val &inp) { return (x == 1) ? inp |= (1 << (pos - 1)) : inp &= ~(1 << (pos - 1)); }
+val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << (pos - 1)) : inp &= ~(1 << (pos - 1)); }
 
 typedef long long ll;
 typedef unsigned long long ull;
@@ -36,21 +36,29 @@ const void IO()
 }
 using namespace std;
 
-void read()
-{
-}
-
-void solve()
-{
-}
-
 int main()
 {
     boost();
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    read();
-    solve();
+    int n(0);
+    cin >> n;
+
+    int a[n][n], dp[1 << n];
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
+            cin >> a[i][j];
+    for (int state = 0; state < 1 << n; ++state)
+        dp[state] = 0;
+
+    for (int state = 1; state < 1 << n; ++state)
+    {
+        int row(__builtin_popcount(state) - 1);
+        for (int i = 0; i < n; ++i)
+            if (getBit(state, i))
+                dp[state] = max(dp[state], dp[state ^ (1 << i)] + a[row][i]);
+    }
+    cout << dp[(1 << n) - 1];
     return 0;
 }
