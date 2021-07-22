@@ -35,13 +35,66 @@ const void IO()
     Fout(name);
 }
 using namespace std;
+int n(0);
+ll **a, **dp;
 
 void read()
 {
+    cin >> n;
+    a = new ll *[5];
+    dp = new ll *[n + 1];
+    for (int i(0); i <= n; ++i)
+        dp[i] = new ll[(1 << 4) + 1];
+    for (int i = 1; i <= 4; ++i)
+    {
+        a[i] = new ll[n + 1];
+        for (int j = 1; j <= n; ++j)
+            cin >> a[i][j];
+    }
+    for (int i(0); i <= n; ++i)
+    {
+        for (int state(0); state <= 16; ++state)
+            dp[i][state] = 0;
+    }
+}
+
+bool vCheck(int state)
+{
+    forup(int, k, 2, 4) if (getBit(state, k) && getBit(state, k - 1)) return 0;
+    return 1;
+}
+
+bool hCheck(int x, int y)
+{
+    forup(int, k, 1, 4) if (getBit(x, k) && getBit(y, k)) return 0;
+    return 1;
+}
+
+ll sum(int col, int state)
+{
+    ll s(0);
+    forup(int, k, 1, 4) if (getBit(state, k)) s += a[k][col];
+    return s;
 }
 
 void solve()
 {
+    for (int i(1); i <= n; ++i)
+    {
+        for (int state1(0); state1 <= (1 << 4); ++state1)
+            if (vCheck(state1))
+            {
+                ll maxVal(LONG_MIN);
+                for (int state2(1); state2 <= (1 << 4); ++state2)
+                    if (vCheck(state2) && hCheck(state1, state2))
+                        maxVal = max(maxVal, dp[i - 1][state2]);
+                dp[i][state1] = maxVal + sum(i, state1);
+            }
+    }
+    ll res(LONG_MIN);
+    for (int state(0); state <= 16; ++state)
+        res = max(res, dp[n][state]);
+    cout << res;
 }
 
 int main()
@@ -52,5 +105,11 @@ int main()
 #endif
     read();
     solve();
+    for (int i = 1; i <= 4; ++i)
+        delete[] a[i];
+    delete[] a;
+    for (int i = 1; i <= n; ++i)
+        delete[] dp[i];
+    delete[] dp;
     return 0;
 }
