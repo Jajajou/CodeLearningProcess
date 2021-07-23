@@ -36,12 +36,31 @@ const void IO()
 }
 using namespace std;
 
-void read()
-{
-}
-
 void solve()
 {
+    int n(0), m(0);
+    cin >> n >> m;
+    if (m < n)
+        swap(m, n);
+    ll dp[m][1 << n], res(0);
+
+    function<bool(int, int)> check = [&](int sta1, int sta2)
+    {
+        forup(int, i, 1, n - 1) if (getBit(sta1, i) == getBit(sta1, i - 1) && getBit(sta1, i - 1) == getBit(sta2, i) && getBit(sta2, i) == getBit(sta2, i - 1)) return 0;
+        return 1;
+    };
+
+    forup(int, i, 0, m - 1) forup(int, state, 0, (1 << n) - 1) dp[i][state] = 0;
+    forup(int, state, 0, (1 << n) - 1) dp[0][state] = 1;
+
+    forup(int, i, 1, m - 1) forup(int, state1, 0, (1 << n) - 1) forup(int, state2, 0, (1 << n) - 1)
+    {
+        if (check(state1, state2))
+            dp[i][state1] += dp[i - 1][state2];
+    }
+
+    forup(int, state, 0, (1 << n) - 1) res += dp[m - 1][state];
+    cout << res << endl;
 }
 
 int main()
@@ -50,7 +69,11 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    read();
-    solve();
+    int t(0);
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
     return 0;
 }
