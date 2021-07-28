@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 #define name "ads" //pls dont forget your task's name
-#define maxn int(1e4)
+#define maxn int(2e4)
 #define cut cout << endl
 #define ll long long
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
@@ -54,7 +54,9 @@ void dfs(int u)
 int main()
 {
     boost();
+#ifndef ONLINE_JUDGE
     IO();
+#endif
     read();
     dfs(1);
     cout << res;
