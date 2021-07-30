@@ -40,13 +40,22 @@ int main()
     string s("");
     cin >> s;
     int n(s.size());
-    string dp[n >> 1];
-    forup(int, i, 0, n >> 1) fordown(int, j, n - i - 1, n >> 1) if (s[i] == s[j])
+    s = " " + s;
+    int dp[n + 1][n + 1];
+    forup(int, i, 0, n) forup(int, j, 0, n) dp[i][j] = 0;
+    forup(int, i, 1, n) fordown(int, j, n, 1) if (s[i] == s[j]) dp[i][n - j + 1] = dp[i - 1][n - j] + 1;
+    else dp[i][n - j + 1] = max(dp[i - 1][n - j + 1], dp[i][n - j]);
+    int m(n);
+    string res("");
+    while (dp[n][m])
     {
-        dp[i] = dp[i - 1] + s[i];
-        break;
+        if (s[n] == s[s.size() - m])
+            res += s[n], --m, --n;
+        else if (dp[n][m] == dp[n - 1][m])
+            --n;
+        else
+            --m;
     }
-    else dp[i] = dp[i - 1];
-    cout << dp[n >> 1];
+    cout << res;
     return 0;
 }

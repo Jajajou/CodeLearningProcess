@@ -34,6 +34,7 @@ void read()
         G[u].push_back(v),
             G[v].push_back(u);
     }
+    path[1] = 1;
 }
 
 void dfs(int u)
@@ -41,7 +42,7 @@ void dfs(int u)
     for (int v : G[u])
     {
         if (path[v] && path[u] - v && !searched[v])
-            ++res;
+            cout << v << endl, ++res;
         if (!path[v] && !searched[v])
         {
             path[v] = u;

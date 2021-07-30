@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "kquery" //pls dont forget your task's name
+#define name "nklineup" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -39,50 +39,66 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-struct Query
+struct Node
 {
-    int l, r, k, id;
+    int Min, Max;
+    Node(int minn = 0, int maxx = 0) { Min = minn, Max = maxx; }
+} tree[4 * maxn];
+int n(0), q(0), a[maxn], leftt(0), rightt(0);
 
-    bool operator<(const Query &q) { return k < q.k; }
-} qs[int(2e5) + 25];
-ii a[int(3e4) + 34];
-int n(0), q(0), bit[int(3e4) + 34];
+Node operator+(const Node &a, const Node &b)
+{
+    Node Res;
+    Res.Max = max(a.Max, b.Max);
+    Res.Min = min(a.Min, b.Min);
+    return Res;
+}
+
+void createTree(int start, int end, int id)
+{
+    if (start == end)
+    {
+        tree[id] = {a[start], a[start]};
+        return;
+    }
+    int mid = (start + end) >> 1;
+    createTree(start, mid, 2 * id);
+    createTree(mid + 1, end, 2 * id + 1);
+    tree[id] = tree[id * 2] + tree[id * 2 + 1];
+}
+
+void get(int start, int end, int qL, int qR, int id)
+{
+    if (qL > end || start > qR)
+        return;
+    if (qL <= start && end <= qR)
+    {
+        leftt = min(leftt, tree[id].Min);
+        rightt = max(rightt, tree[id].Max);
+        return;
+    }
+    int mid = (start + end) >> 1;
+    get(start, mid, qL, qR, id * 2);
+    get(mid + 1, end, qL, qR, id * 2 + 1);
+}
 
 void read()
 {
-    cin >> n;
-    forup(int, i, 1, n) a[i].se = i, cin >> a[i].fi;
-    cin >> q;
-    forup(int, i, 1, q) qs[i].id = i, cin >> qs[i].l >> qs[i].r >> qs[i].k;
-    sort(a + 1, a + n + 1);
-    sort(qs + 1, qs + 1 + q);
-}
-
-void update(int x)
-{
-    for (x; x <= n; x += x & (-x))
-        ++bit[x];
-}
-
-int get(int x)
-{
-    int res(0);
-    for (x; x; x -= x & (-x))
-        res += bit[x];
-    return res;
+    cin >> n >> q;
+    forup(int, i, 1, n) cin >> a[i];
+    createTree(1, n, 1);
 }
 
 void solve()
 {
-    int res[q + 1];
-    int i(n);
-    fordown(int, x, q, 1)
+    int l(0), r(0);
+    while (cin >> l >> r)
     {
-        while (a[i].fi > qs[x].k)
-            update(a[i--].se);
-        res[qs[x].id] = get(qs[x].r) - get(qs[x].l - 1);
+        rightt = INT_MIN;
+        leftt = INT_MAX;
+        get(1, n, l, r, 1);
+        cout << rightt - leftt << endl;
     }
-    forup(int, x, 1, q) cout << res[x] << "\n";
 }
 
 int main()

@@ -3,6 +3,7 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
+using namespace std;
 #define name "test" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
@@ -20,21 +21,22 @@
 #define fordown(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
 #define allVi(x) x.begin(), x.end()
 #define allArr(x, start, end) x, x + begin, x + end + begin
+#define BIT(n) (1 << n)
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> ii;
 
 template <class val>
 val getBit(val x, val pos) { return x >> (pos - 1) & 1; }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << (pos - 1)) : inp &= ~(1 << (pos - 1)); }
 
-typedef long long ll;
-typedef unsigned long long ull;
-
 const void IO()
 {
     Fin(name);
     Fout(name);
 }
-using namespace std;
 
 int main()
 {
@@ -42,10 +44,7 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int a(4);
-    for (int i = 0; i < 8; i++)
-        if (getBit(a, i))
-            cout << i << endl;
-    cout << __builtin_ctz(a);
+    int n(2);
+    cout << __builtin_popcount(10) << endl;
     return 0;
 }

@@ -50,13 +50,13 @@ bool inRange(int x, int y) { return x >= 0 && x <= 3 && y >= 0 && y <= 3; }
 int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
 void solve()
 {
-    int cp(0), dp[1 << 16], f[1 << 16];
-    forup(int, i, 0, 3) forup(int, j, 0, 3) if (in1[i][j] - '0')
-        cp += (1 << (i * 4 + j));
-    dp[cp] = 0;
-    f[cp] = 1;
+    int res(0), dp[1 << 16];
+    bool visited[1 << 16];
+    forup(int, i, 0, 3) forup(int, j, 0, 3) if (in1[i][j] - '0') res += (1 << (i * 4 + j));
+    memset(visited, 0, sizeof(visited));
+    visited[res] = 1;
     deque<int> q;
-    q.pb(cp);
+    q.pb(res);
     while (!q.empty())
     {
         int state(q.front());
@@ -66,26 +66,24 @@ void solve()
             if (!getBit(state, pos))
                 continue;
             int i(pos / 4), j(pos % 4);
-            for (int k = 0; k < 4; ++k)
+            forup(int, k, 0, 3)
             {
-                int x = i + dx[k], y = j + dy[k];
-                if (inRange(x, y))
-                {
-                    if (getBit(state, (x * 4 + y)))
-                        continue;
-                    int cpState = state - (1 << (i * 4 + j)) + (1 << (x * 4 + y));
-                    if (f[cpState])
-                        continue;
-                    f[cpState] = 1;
-                    dp[cpState] = dp[state] + 1;
-                    q.pb(cpState);
-                }
+                int x(i + dx[k]), y(j + dy[k]);
+                if (!inRange(x, y))
+                    continue;
+                if (getBit(state, x * 4 + y))
+                    continue;
+                int cp(state + (1 << (x * 4 + y)) - (1 << (i * 4 + j)));
+                if (visited[cp])
+                    continue;
+                visited[cp] = 1;
+                dp[cp] = dp[state] + 1;
+                q.pb(cp);
             }
         }
     }
-    int res(0);
-    forup(int, i, 0, 3) forup(int, j, 0, 3) if (in2[i][j] - '0')
-        res += (1 << (i * 4 + j));
+    res = 0;
+    forup(int, i, 0, 3) forup(int, j, 0, 3) if (in2[i][j] - '0') res += (1 << (i * 4 + j));
     cout << dp[res];
 }
 

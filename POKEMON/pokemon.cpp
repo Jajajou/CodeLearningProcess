@@ -48,9 +48,9 @@ int n(0), T(0), a[21][21], dp[21][1 << 20 + 1];
 void read()
 {
     scanf("%d %d", &n, &T);
-    forup(int, i, 1, n) scanf("%d %d %d", &station[i].p, &station[i].t, &station[i].d), station[i].d = (station[i].d == -1) ? 4000 : station[i].d;
+    forup(int, i, 1, n) scanf("%d %d %d", &station[i].p, &station[i].t, &station[i].d), station[i].d = (station[i].d == -1) ? int(1e6) : station[i].d;
     forup(int, i, 1, n + 2) forup(int, j, 1, n + 2) scanf("%d", &a[i][j]);
-    forup(int, i, 0, n) forup(int, state, 0, (1 << n)) dp[i][state] = 4000;
+    forup(int, i, 0, n) forup(int, state, 0, (1 << n)) dp[i][state] = int(1e5);
 }
 
 void solve()
