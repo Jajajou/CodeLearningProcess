@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
+#define name "rgame" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
