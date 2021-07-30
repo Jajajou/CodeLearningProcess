@@ -42,13 +42,13 @@ const void IO()
 
 void solve()
 {
-    int n(0);
+    int n(0), cp(2);
     cin >> n;
-    vector<int> arr(n, 0);
+    vector<ll> arr(n, 0);
     --n;
     forup(int, i, 0, n) cin >> arr[i];
     sort(arr.begin(), arr.end(), greater<int>());
-    int res(1), cp(2);
+    ll res(1);
     forup(int, i, 0, n - 1)
     {
         if (arr[i] == arr[i + 1])
@@ -56,11 +56,11 @@ void solve()
             res *= arr[i];
             ++i, --cp;
         }
-        if (!cp || i > n)
-            break;
+        if (!cp)
+            return (void)(cout << res << endl);
     }
 
-    return (void)(cout << (cp == 0 ? res : -1) << endl);
+    return (void)(cout << -1 << endl);
 }
 
 int main()
