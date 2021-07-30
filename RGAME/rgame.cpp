@@ -55,8 +55,8 @@ void solve()
     {
         if (arr[i] == arr[i + 1])
         {
-            i += 2, --cp;
             res *= arr[i];
+            i += 2, --cp;
         }
         if (!cp || i > n)
             break;
