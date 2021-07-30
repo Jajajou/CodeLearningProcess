@@ -46,9 +46,7 @@ void solve()
     cin >> n;
     vector<int> arr(n, 0);
     --n;
-    forup(int, i, 0, n)
-            cin >>
-        arr[i];
+    forup(int, i, 0, n) cin >> arr[i];
     sort(arr.begin(), arr.end(), greater<int>());
     int res(1), cp(2);
     forup(int, i, 0, n - 1)
@@ -56,7 +54,7 @@ void solve()
         if (arr[i] == arr[i + 1])
         {
             res *= arr[i];
-            i += 2, --cp;
+            ++i, --cp;
         }
         if (!cp || i > n)
             break;
