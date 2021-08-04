@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "func" //pls dont forget your task's name
-#define maxn int(1e7) + 16
+#define name "doichu" //pls dont forget your task's name
+#define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -33,13 +33,77 @@ val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : 
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-
+struct P
+{
+    int x, y;
+    void read()
+    {
+        cin >> x >> y;
+    }
+    P operator-(const P &b) const
+    {
+        return {x - b.x, y - b.y};
+    }
+    void operator-=(const P &b)
+    {
+        x -= b.x;
+        y -= b.y;
+    }
+    ll operator*(const P &b) const
+    {
+        return (ll)x * b.y - (ll)y * b.x;
+    }
+    ll triangle(const P &b, const P &c) const
+    {
+        return (b - *this) * (c - *this);
+    }
+    bool operator<(const P &b) const
+    {
+        return make_pair(x, y) < make_pair(b.x, b.y);
+    }
+    ll Dist(const P &b) const
+    {
+        return (ll)(x - b.x) * (x - b.x) + (ll)(y - b.y) * (y - b.y);
+    }
+};
 const void IO()
 {
     Fin(name);
     Fout(name);
 }
-ll k, r, p[maxn], q[maxn], M;
+string s;
+int k(0);
+
+void read()
+{
+    cin >> s >> k;
+}
+
+int solve(int n, int k, char ch)
+{
+    int maxlen(1), cnt(0), l(0), r(0);
+    while (r < n)
+    {
+        if (s[r] != ch)
+            ++cnt;
+        while (cnt > k)
+        {
+            if (s[l] != ch)
+                --cnt;
+            ++l;
+        }
+        maxlen = max(maxlen, r - l + 1);
+        ++r;
+    }
+    return maxlen;
+}
+
+void solve()
+{
+    int res(0);
+    forup(int, i, 0, 26) res = max(res, solve(s.size(), k, 'a' + i));
+    cout << res;
+}
 
 int main()
 {
@@ -47,24 +111,7 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    function<void(ll &, ll &)> fixed = [&fixed](ll &a, ll &b)
-    {
-        int tmp(__gcd(a, b));
-        a /= tmp, b /= tmp;
-    };
-
-    while (cin >> k >> r >> p[1] >> q[1] >> M)
-    {
-        fixed(p[1], q[1]);
-        cout << p[1] << " " << q[1] << endl;
-        forup(int, i, 2, k)
-        {
-            p[i] = q[i - 1] * r + p[i - 1];
-            q[i] = q[i - 1];
-            fixed(p[i], q[i]);
-            swap(p[i], q[i]);
-        }
-        cout << p[k] % M << " " << q[k] % M << endl;
-    }
+    read();
+    solve();
     return 0;
 }

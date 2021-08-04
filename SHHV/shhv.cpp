@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
+#define name "shhv" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,7 +25,7 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
@@ -33,60 +33,55 @@ val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : 
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-struct P
-{
-   int x, y;
-   void read()
-   {
-      cin >> x >> y;
-   }
-   P operator-(const P &b) const
-   {
-      return {x - b.x, y - b.y};
-   }
-   void operator-=(const P &b)
-   {
-      x -= b.x;
-      y -= b.y;
-   }
-   ll operator*(const P &b) const
-   {
-      return (ll)x * b.y - (ll)y * b.x;
-   }
-   ll triangle(const P &b, const P &c) const
-   {
-      return (b - *this) * (c - *this);
-   }
-   bool operator<(const P &b) const
-   {
-      return make_pair(x, y) < make_pair(b.x, b.y);
-   }
-   ll Dist(const P &b) const
-   {
-      return (ll)(x - b.x) * (x - b.x) + (ll)(y - b.y) * (y - b.y);
-   }
-};
+
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-
-void read()
-{
-}
-
-void solve()
-{
-}
+int f[13];
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int x(0), n(0), arr[13];
+    f[0] = 1;
+    while (cin >> x)
+        arr[++n] = x;
+    --n;
+    forup(int, i, 1, n) f[i] = f[i - 1] * i;
+    cout << 1 + [&]()
+    {
+        int res(0);
+        bool taken[n + 1];
+        forup(int, i, 1, n) taken[i] = 1;
+        forup(int, i, 1, n)
+        {
+            int cnt(0);
+            forup(int, j, 1, n) cnt += (j < arr[i] and taken[j]);
+            res += f[n - i] * cnt;
+            taken[arr[i]] = 0;
+        }
+        return res;
+    }() << "\n";
+    bool taken[n + 1];
+    forup(int, i, 1, n) taken[i] = 1;
+    forup(int, i, 1, n)
+    {
+        forup(int, j, 1, n) if (taken[j])
+        {
+            if (arr[n + 1] > f[n - i])
+                arr[n + 1] -= f[n - i];
+            else
+            {
+                cout << j << ' ';
+                taken[j] = 0;
+                break;
+            }
+        }
+    }
+    return 0;
 }

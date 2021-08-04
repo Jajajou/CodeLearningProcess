@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "func" //pls dont forget your task's name
-#define maxn int(1e7) + 16
+#define name "oddprod" //pls dont forget your task's name
+#define maxn int(1e5) + 15
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -33,13 +33,44 @@ val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : 
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-
+struct P
+{
+    int x, y;
+    void read()
+    {
+        cin >> x >> y;
+    }
+    P operator-(const P &b) const
+    {
+        return {x - b.x, y - b.y};
+    }
+    void operator-=(const P &b)
+    {
+        x -= b.x;
+        y -= b.y;
+    }
+    ll operator*(const P &b) const
+    {
+        return (ll)x * b.y - (ll)y * b.x;
+    }
+    ll triangle(const P &b, const P &c) const
+    {
+        return (b - *this) * (c - *this);
+    }
+    bool operator<(const P &b) const
+    {
+        return make_pair(x, y) < make_pair(b.x, b.y);
+    }
+    ll Dist(const P &b) const
+    {
+        return (ll)(x - b.x) * (x - b.x) + (ll)(y - b.y) * (y - b.y);
+    }
+};
 const void IO()
 {
     Fin(name);
     Fout(name);
 }
-ll k, r, p[maxn], q[maxn], M;
 
 int main()
 {
@@ -47,24 +78,24 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    function<void(ll &, ll &)> fixed = [&fixed](ll &a, ll &b)
+    int n(0), res(0), a(0), cnt(0), neg(0), tmp(0);
+    cin >> n;
+    for (int i = 1; i <= n; i++)
     {
-        int tmp(__gcd(a, b));
-        a /= tmp, b /= tmp;
-    };
-
-    while (cin >> k >> r >> p[1] >> q[1] >> M)
-    {
-        fixed(p[1], q[1]);
-        cout << p[1] << " " << q[1] << endl;
-        forup(int, i, 2, k)
+        cin >> a;
+        if (a % 2 == 0)
+            cnt = i;
+        if (a < 0)
         {
-            p[i] = q[i - 1] * r + p[i - 1];
-            q[i] = q[i - 1];
-            fixed(p[i], q[i]);
-            swap(p[i], q[i]);
+            ++tmp;
+            if (neg == 0)
+                neg = i;
         }
-        cout << p[k] % M << " " << q[k] % M << endl;
+        if (tmp % 2 == 0)
+            res = max(res, i);
+        else
+            res = max(res, i - neg);
     }
+    cout << res;
     return 0;
 }
