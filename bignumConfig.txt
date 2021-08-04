@@ -1,114 +1,117 @@
-const int BASE = int(1e8);
+const int BASE = 1e9;
 typedef vector<int> big;
+
 void fix(big &a)
 {
-   a.push_back(0);
-   for (int i = 0; i < a.size() - 1; ++i)
-   {
-      a[i + 1] += a[i] / BASE;
-      a[i] %= BASE;
-      if (a[i] < 0)
-      {
-         a[i] += BASE;
-         a[i + 1]--;
-      }
-   }
-   while (a.size() >= 2 && a.back() == 0)
-      a.pop_back();
+    while (a.size() >= 2 && a.back() == 0)
+        a.pop_back();
+}
+
+big to_big(int x)
+{
+    assert(x < BASE);
+    return big(1, x);
+}
+
+bool operator>=(big a, big b)
+{
+    fix(a), fix(b);
+    if (a.size() != b.size())
+        return (a.size() > b.size());
+    for (int i = (int)a.size() - 1; i >= 0; i--)
+        if (a[i] != b[i])
+            return a[i] > b[i];
+    return true;
+}
+
+big operator+(big a, big b)
+{
+    fix(a), fix(b);
+    big c;
+    int g = 0;
+    for (int i = 0; i <= max(a.size(), b.size()) - 1; i++)
+    {
+        if (i < a.size())
+            g += a[i];
+        if (i < b.size())
+            g += b[i];
+        c.pb(g % BASE);
+        g /= BASE;
+    }
+    if (g)
+        c.pb(g);
+    return fix(c), c;
+}
+
+big operator-(big a, big b)
+{
+    fix(a), fix(b);
+    big c;
+    int g = 0;
+    for (int i = 0; i < a.size(); i++)
+    {
+        g += a[i];
+        if (i < b.size())
+            g -= b[i];
+        if (g >= 0)
+            c.pb(g), g = 0;
+        else
+            c.pb(g + BASE), g = -1;
+    }
+    return fix(c), c;
 }
 big operator*(const big &a, const big &b)
 {
-   big c(a.size() + b.size() + 1);
-   for (int i = 0; i < a.size(); ++i)
-      for (int j = 0; j < b.size(); ++j)
-      {
-         c[i + j] += a[i] * b[j];
-         c[i + j + 1] += c[i + j] / BASE;
-         c[i + j] %= BASE;
-      }
-   return fix(c), c;
-}
-big to_big(int x)
-{
-   assert(x < BASE);
-   return big(1, x);
-}
-big operator+(big a, const big &b)
-{
-   a.resize(max(a.size(), b.size()));
-   for (int i = 0; i < b.size(); ++i)
-      a[i] += b[i];
-   return fix(a), a;
-}
-void operator+=(big &a, big &b)
-{
-   a.resize(max(SZ(a), SZ(b)));
-   forup(int, i, 0, SZ(b))
-       a[i] += b[i];
-   fix(a);
-}
-big operator-(big a, const big &b)
-{
-   for (int i = 0; i < b.size(); ++i)
-      a[i] -= b[i];
-   return fix(a), a;
-}
-void operator-=(big &a, big &b)
-{
-   forup(int, i, 0, SZ(b))
-       a[i] -= b[i];
-   fix(a);
-}
-big operator*(big a, int x)
-{
-   assert(x < BASE);
-   for (int i = 0; i < a.size(); ++i)
-      a[i] *= x;
-   return fix(a), a;
-}
-bool operator<(const big &a, const big &b)
-{
-   if (a.size() != b.size())
-      return a.size() < b.size();
-   for (int i = a.size() - 1; i >= 0; i--)
-      if (a[i] != b[i])
-         return a[i] < b[i];
-   return false;
+    big res(a.size() + b.size() + 1, 0);
+    for (int i = 0; i < a.size(); ++i)
+    {
+        int tmp(0);
+        for (int j = 0; j < b.size(); ++j)
+        {
+            ll s = (ll)res[i + j] + tmp + (ll)a[i] * b[j];
+            res[i + j] = s % BASE;
+            tmp = s / BASE;
+        }
+        if (tmp)
+            res[i + b.size()] = tmp;
+    }
+    return fix(res), res;
 }
 big operator/(big a, int x)
 {
-   assert(x < BASE);
-   for (int i = (int)a.size() - 1, r = 0; i >= 0; --i, r %= x)
-   {
-      r = r * BASE + a[i];
-      a[i] = r / x;
-   }
-   return fix(a), a;
+    assert(x < BASE);
+    for (int i = (int)a.size() - 1, r = 0; i >= 0; --i, r %= x)
+    {
+        r = r * BASE + a[i];
+        a[i] = r / x;
+    }
+    return fix(a), a;
 }
 int operator%(const big &a, int x)
 {
-   int r = 0;
-   for (int i = (int)a.size() - 1; i >= 0; --i)
-      r = (r * BASE + a[i]) % x;
-   return r;
+    int r = 0;
+    for (int i = (int)a.size() - 1; i >= 0; --i)
+        r = (r * BASE + a[i]) % x;
+    return r;
 }
 istream &operator>>(istream &cin, big &a)
 {
-   string s;
-   cin >> s;
-   a.clear();
-   a.resize(s.size() / 4 + 1);
-   for (int i = 0; i < s.size(); ++i)
-   {
-      int x = (s.size() - 1 - i) / 4; // <- log10(BASE)=4
-      a[x] = a[x] * 10 + (s[i] - '0');
-   }
-   return fix(a), cin;
+    string s;
+    cin >> s;
+    while (s.size() % 9)
+        s = '0' + s;
+    for (int i = 0; i < s.size(); i += 9)
+    {
+        ll b = 0;
+        forup(int, j, i, i + 9 - 1) b = b * 10 + (s[j] - '0');
+        a.insert(a.begin(), b);
+    }
+    return fix(a), cin;
 }
 ostream &operator<<(ostream &cout, const big &a)
 {
-   printf("%d", a.back());
-   for (int i = (int)a.size() - 2; i >= 0; i--)
-      printf("%04d", a[i]);
-   return cout;
+    printf("%d", a.back());
+    for (int i = (int)a.size() - 2; i >= 0; i--)
+        printf("%09d", a[i]);
+    return cout;
 }
