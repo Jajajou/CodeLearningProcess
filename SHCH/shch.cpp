@@ -4,9 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "combin" //pls dont forget your task's name
+#define name "shch" //pls dont forget your task's name
 #define maxn 101001
-#define SZ(a) int(a.size())
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -115,9 +114,16 @@ big operator*(const big &a, const big &b)
             tmp = s / BASE;
         }
         if (tmp)
-            res[i + b.size()] = tmp;
+            res[i + b.size()] += tmp;
     }
     return fix(res), res;
+}
+big operator*(big a, int x)
+{
+    assert(x < BASE);
+    for (int i = 0; i < a.size(); ++i)
+        a[i] *= x;
+    return fix(a), a;
 }
 big operator/(big a, int x)
 {
@@ -157,42 +163,52 @@ ostream &operator<<(ostream &cout, const big &a)
         printf("%09d", a[i]);
     return cout;
 }
-int n, k, inArr[505];
-big f[505][505], m;
+int n, k, inArr[101];
+big A[101], m;
 
 void read()
 {
     cin >> n >> k >> m;
     m = m - to_big(1);
+    inArr[0] = 0;
     forup(int, i, 1, k) cin >> inArr[i];
-    f[0][0] = to_big(1);
-    forup(int, i, 1, n) forup(int, j, 0, i) if (j == 0 || j == i)
-        f[j][i] = to_big(1);
-    else f[j][i] = f[j][i - 1] + f[j - 1][i - 1];
+    A[0] = to_big(1);
+    forup(int, i, 1, n) A[i] = A[i - 1] * (n - k + i);
 }
 
-void solve()
+void solve1()
 {
-    int j(0);
+    bool taken[n + 1];
+    forup(int, j, 0, n) taken[j] = 1;
     forup(int, i, 1, k)
     {
-        ++j;
-        while (j < n)
-            if (k - i <= n - j && m >= f[k - i][n - j])
-                m = m - f[k - i][n - j], ++j;
-            else
+        int cnt(0), tmp(0);
+        while (m >= A[k - i])
+            m = m - A[k - i], ++cnt;
+        forup(int, j, 1, n)
+        {
+            if (tmp == cnt && taken[j])
+            {
+                printf("%d%c", j, i == k ? '\n' : ' ');
+                taken[j] = 0;
                 break;
-        cout << j << ' ';
+            }
+            tmp += taken[j] != 0;
+        }
     }
-    cut;
-    //arr kth
+}
+
+void solve2()
+{
     big res(to_big(1));
-    bool taken[n + 1]{0};
+    bool taken[n + 1];
+    taken[0] = 0;
     forup(int, i, 1, n) taken[i] = 1;
     forup(int, i, 1, k)
     {
-        forup(int, j, inArr[i - 1] + 1, inArr[i] - 1) if (taken[j])
-            res = res + f[k - i][n - j];
+        int cnt(0);
+        forup(int, j, 1, inArr[i] - 1) cnt += taken[j] != 0;
+        res = res + A[k - i] * to_big(cnt);
         taken[inArr[i]] = 0;
     }
     cout << res;
@@ -205,6 +221,7 @@ int main()
     IO();
 #endif
     read();
-    solve();
+    solve1();
+    solve2();
     return 0;
 }

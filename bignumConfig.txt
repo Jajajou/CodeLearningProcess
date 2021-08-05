@@ -77,6 +77,13 @@ big operator*(const big &a, const big &b)
     }
     return fix(res), res;
 }
+big operator*(big a, int x)
+{
+    assert(x < BASE);
+    for (int i = 0; i < a.size(); ++i)
+        a[i] *= x;
+    return fix(a), a;
+}
 big operator/(big a, int x)
 {
     assert(x < BASE);
