@@ -157,12 +157,14 @@ ostream &operator<<(ostream &cout, const big &a)
         printf("%09d", a[i]);
     return cout;
 }
-int n, k, ans[101];
-big f[101][101], m;
+int n, k, inArr[505];
+big f[505][505], m;
 
 void read()
 {
     cin >> n >> k >> m;
+    m = m - to_big(1);
+    forup(int, i, 1, k) cin >> inArr[i];
     f[0][0] = to_big(1);
     forup(int, i, 1, n) forup(int, j, 0, i) if (j == 0 || j == i)
         f[j][i] = to_big(1);
@@ -182,6 +184,25 @@ void solve()
                 break;
         cout << j << ' ';
     }
+    cut;
+    //arr kth
+    big res(to_big(1));
+    bool taken[n + 1]{0};
+    forup(int, i, 1, n) taken[i] = 1;
+    forup(int, i, 1, k)
+    {
+        int j(inArr[i - 1]);
+        while (!taken[j])
+            ++j;
+        while (j < inArr[i])
+        {
+            if (taken[j])
+                res = res + f[k - i][n - j];
+            ++j;
+        }
+        taken[inArr[i]] = 0;
+    }
+    cout << res;
 }
 
 int main()
