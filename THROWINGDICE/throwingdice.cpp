@@ -52,11 +52,10 @@ public:
 
     diceMatrix operator%(const ll &k)
     {
-        ll x[6][6] = {{0}};
         for (int i(0); i < 6; ++i)
             for (int j(0); j < 6; ++j)
-                x[i][j] = dice[i][j] % k;
-        return diceMatrix(x);
+                dice[i][j] %= k;
+        return *this;
     }
 
     diceMatrix operator*(const diceMatrix &m)
@@ -65,8 +64,12 @@ public:
         for (int i(0); i < 6; ++i)
         {
             for (int j(0); j < 6; ++j)
-                for (int k = 0; k < 6; k++)
-                    x[i][j] = (x[i][j] % maxn + (dice[i][k] * m.dice[k][j] % maxn)) % maxn;
+                x[i][j] = [&](int i, int j)
+                {
+                    ll res(0);
+                    forup(int, k, 0, 5) res = (res % maxn + (dice[i][k] * m.dice[k][j] % maxn)) % maxn;
+                    return res;
+                }(i, j);
         }
         return diceMatrix(x);
     }
@@ -86,10 +89,10 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int preAns[6] = {1, 2, 4, 8, 16, 32};
+    // int preAns[6] = {1, 2, 4, 8, 16, 32};
     ll n(0);
     cin >> n;
-    if (n <= 6)
-        return cout << preAns[n - 1], 0;
+    // if (n <= 6)
+    //     return cout << preAns[n - 1], 0;
     cout << (diceMatrix() ^= n).dice[0][0];
 }

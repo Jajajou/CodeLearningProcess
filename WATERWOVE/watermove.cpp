@@ -38,77 +38,37 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-
-struct pt
+struct Point
 {
-    double x, y;
-    pt(double a = 0.0, double b = 0.0)
-    {
-        x = a;
-        y = b;
-    }
+    ll x, y;
+    Point(ll a = 0, ll b = 0) { x = a, y = b; }
 } p[maxn];
-int n(0), arr[maxn], s[maxn];
-vector<pt> up, down;
-
-bool cmp(pt a, pt b)
+bool cw(const Point &a, const Point &b, const Point &c)
 {
-    return a.x < b.x || a.x == b.x && a.y < b.y;
+    return (b.x - a.x) * (b.y + a.y) + (c.x - b.x) * (c.y + b.y) + (a.x - c.x) * (a.y + c.y) > 0;
 }
-
-bool cw(pt a, pt b, pt c)
-{
-    return a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y) < 0;
-}
-
-bool ccw(pt a, pt b, pt c)
-{
-    return a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y) > 0;
-}
-
-double size(vector<pt> poly, int k)
-{
-    double S = (poly[k - 1].x - poly[0].x) * (poly[k - 1].y + poly[0].y) / 2;
-    for (int i = 1; i < k; ++i)
-        S += (poly[i - 1].x - poly[i].x) * (poly[i - 1].y + poly[i].y) / 2;
-    return S;
-}
-
-void convex_hull(pt a[])
-{
-    if (n == 1)
-    {
-        return;
-    }
-    sort(a, a + n + 1, &cmp);
-    pt p1 = a[0], p2 = a[n];
-    up.push_back(p1);
-    down.push_back(p1);
-
-    for (size_t i = 1; i <= n; ++i)
-    {
-        if (i == n || cw(p1, a[i], p2))
-        {
-            while (up.size() >= 2 && !cw(up[up.size() - 2], up[up.size() - 1], a[i]))
-                up.pop_back();
-            up.push_back(a[i]);
-        }
-        if (i == n || ccw(p1, a[i], p2))
-        {
-            while (down.size() >= 2 && !ccw(down[down.size() - 2], down[down.size() - 1], a[i]))
-                down.pop_back();
-            down.push_back(a[i]);
-        }
-    }
-    printf("%0.1f\n", abs(size(up, up.size())) - abs(size(down, down.size())));
-}
+int n(0);
+ll arr[maxn], s[maxn];
 
 void read()
 {
     cin >> n;
     forup(int, i, 1, n) cin >> arr[i], s[i] = s[i - 1] + arr[i];
-    forup(int, i, 0, n) p[i] = {(double)(i), (double)(s[i])};
-    convex_hull(p);
+    forup(int, i, 0, n) p[i] = {i, s[i]};
+}
+
+void solve()
+{
+    int hullSize(n);
+    fordown(int, i, n - 1, 0)
+    {
+        while (hullSize != n and !cw(p[hullSize - 1], p[hullSize], p[i]))
+            --hullSize;
+        p[++hullSize] = p[i];
+    }
+    ll res(0);
+    forup(int, i, 1, hullSize) res += (p[i - 1].x - p[i].x) * (p[i - 1].y + p[i].y);
+    printf("%lld%s", abs(res / 2), res & 1 ? ".5" : ".0");
 }
 
 int main()
@@ -118,5 +78,6 @@ int main()
     IO();
 #endif
     read();
+    solve();
     return 0;
 }
