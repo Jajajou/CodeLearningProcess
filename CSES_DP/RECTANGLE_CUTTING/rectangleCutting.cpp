@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "rectangleCutting" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,7 +25,7 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
@@ -36,28 +36,29 @@ typedef pair<int, int> ii;
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
-   cout << (1 & (-1));
-   cout << '\n'
-        << getBit(1, 1);
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int w(0), h(0);
+    cin >> w >> h;
+    vector<vector<int>> dp(w + 1, vector<int>(h + 1));
+    forup(int, i, 0, w) forup(int, j, 0, h)
+    {
+        dp[i][j] = i == j ? 0 : [&](int w, int h)
+        {
+            int res = int(1e7);
+            forup(int, k, 1, w) res = min(res, dp[k][j] + dp[i - k][j] + 1);
+            forup(int, k, 1, h) res = min(res, dp[i][k] + dp[i][j - k] + 1);
+            return res;
+        }(i - 1, j - 1);
+    }
+    cout << dp[w][h];
+    return 0;
 }

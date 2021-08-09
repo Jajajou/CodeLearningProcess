@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "twoSet" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,7 +25,7 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
@@ -36,28 +36,44 @@ typedef pair<int, int> ii;
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
-   cout << (1 & (-1));
-   cout << '\n'
-        << getBit(1, 1);
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    ll n(0);
+    cin >> n;
+    if ((n * (n + 1) >> 1) & 1)
+    {
+        cout << "NO";
+    }
+    else
+    {
+        cout << "YES\n";
+        set<ll> s1, s2;
+        forup(ll, i, 1, n) s1.insert(i);
+        ll tmp(n), target(((n * (n + 1)) >> 1) >> 1);
+        while (!s1.count(target))
+        {
+            target -= tmp;
+            s1.erase(tmp);
+            s2.insert(tmp);
+            --tmp;
+        }
+        s1.erase(target);
+        s2.insert(target);
+        cout << s1.size() << endl;
+        for (int v : s1)
+            cout << v << " ";
+        cout << "\n"
+             << s2.size() << endl;
+        for (int v : s2)
+            cout << v << " ";
+    }
+    return 0;
 }

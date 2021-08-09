@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "editDistance" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,7 +25,7 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
@@ -36,28 +36,29 @@ typedef pair<int, int> ii;
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
-   cout << (1 & (-1));
-   cout << '\n'
-        << getBit(1, 1);
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    string a, b;
+    cin >> a >> b;
+    vector<vector<int>> dp(a.size() + 1, vector<int>(b.size() + 1, int(1e6)));
+    dp[0][0] = 0;
+    forup(int, i, 0, a.size()) forup(int, j, 0, b.size())
+    {
+        if (i)
+            dp[i][j] = min(dp[i][j], 1 + dp[i - 1][j]);
+        if (j)
+            dp[i][j] = min(dp[i][j], 1 + dp[i][j - 1]);
+        if (i and j)
+            dp[i][j] = min(dp[i][j], (a[i - 1] != b[j - 1]) + dp[i - 1][j - 1]);
+    }
+    cout << dp[a.size()][b.size()];
+    return 0;
 }

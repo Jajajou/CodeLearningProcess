@@ -30,9 +30,9 @@ int main()
     cin >> n;
     vector<ll> f(n + 1);
     map<ll, ll> m;
-    for (int i(1); i <= n and cin >> x; ++i)
+    for (int i(1); i <= n; ++i)
     {
-        f[i] = f[i - 1] + x;
+        f[i] = f[i - 1] + i;
     }
     int tmp(f[n]);
     ll res(0);

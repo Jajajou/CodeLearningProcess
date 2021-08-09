@@ -33,39 +33,7 @@ val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : 
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-struct P
-{
-   int x, y;
-   void read()
-   {
-      cin >> x >> y;
-   }
-   P operator-(const P &b) const
-   {
-      return {x - b.x, y - b.y};
-   }
-   void operator-=(const P &b)
-   {
-      x -= b.x;
-      y -= b.y;
-   }
-   ll operator*(const P &b) const
-   {
-      return (ll)x * b.y - (ll)y * b.x;
-   }
-   ll triangle(const P &b, const P &c) const
-   {
-      return (b - *this) * (c - *this);
-   }
-   bool operator<(const P &b) const
-   {
-      return make_pair(x, y) < make_pair(b.x, b.y);
-   }
-   ll Dist(const P &b) const
-   {
-      return (ll)(x - b.x) * (x - b.x) + (ll)(y - b.y) * (y - b.y);
-   }
-};
+
 const void IO()
 {
    Fin(name);

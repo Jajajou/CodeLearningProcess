@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
-#define maxn 101001
+#define name "twoSet" //pls dont forget your task's name
+#define maxn ll(1e9) + 7LL
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -25,7 +25,7 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
@@ -36,28 +36,28 @@ typedef pair<int, int> ii;
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
-   cout << (1 & (-1));
-   cout << '\n'
-        << getBit(1, 1);
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0);
+    cin >> n;
+    int target(n * (n + 1) >> 1 >> 1);
+    if (n * (n + 1) >> 1 & 1)
+        return cout << 0, 0;
+    vector<vector<ll>> dp(n + 1, vector<ll>(target + 1, 0));
+    dp[0][0] = 1;
+    forup(int, i, 1, n) forup(int, j, 0, target)
+    {
+        dp[i][j] = dp[i - 1][j];
+        (dp[i][j] += j - i >= 0 ? dp[i - 1][j - i] : 0) %= maxn;
+    }
+    cout << dp[n - 1][target];
+    return 0;
 }

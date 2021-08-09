@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "nklineup" //pls dont forget your task's name
+#define name "c11seq2" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -29,43 +29,16 @@ val getBit(val x, val pos)
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
-const void maximize(int &a, int b) { a = max(a, b); }
-const void minimize(int &a, int b) { a = min(a, b); }
+
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
     Fin(name);
     Fout(name);
 }
-struct BIT
-{
-    int n, cp;
-    vector<int> tree, arr;
-    funcc optimal;
-    BIT(int n, int cp, funcc func) : n(n), cp(cp), optimal(func), tree(n + 1, cp), arr(n + 1) {}
-    void update(int val, int pos)
-    {
-        arr[pos] = val;
-        for (; pos <= n; pos += pos & (-pos))
-            optimal(tree[pos], val);
-    }
-    int get(int l, int r)
-    {
-        int res(cp);
-        while (l <= r)
-        {
-            if (r - (r & -r) >= l)
-                optimal(res, tree[r]), r -= r & -r;
-            else
-                optimal(res, arr[r]), r -= 1;
-        }
-        return res;
-    }
-};
 
 int main()
 {
@@ -73,16 +46,49 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n(0), k(0);
+    int n(0), k(0), m(0);
     cin >> n >> k;
-    BIT minBIT(n, INT_MAX, minimize);
-    BIT maxBIT(n, INT_MIN, maximize);
-    for (int i(1), x(0); i <= n && cin >> x; ++i)
-        minBIT.update(x, i), maxBIT.update(x, i);
-    int qL(0), qR(0);
-    while (cin >> qL >> qR)
+    vector<ii> c(n + 1);
+    c[0].fi = c[0].se = INT_MIN;
+    vector<int> inArr(k + 1);
+    forup(int, i, 1, n) cin >> c[i].fi, c[i].se = i;
+    sort(c.begin(), c.end());
+    cin >> m;
+    forup(int, i, 1, k) cin >> inArr[i];
+    //dp
+    vector<vector<ll>> dp(n + 1, vector<ll>(n + 1, 0));
+    dp[0][0] = 1LL;
+    forup(int, i, 1, n) forup(int, j, 0, i) if (j == 0 || j == i)
+        dp[j][i] = 1LL;
+    else dp[j][i] = dp[j][i - 1] + dp[j - 1][i - 1];
+    //arr mth
+    vector<int> taken(k + 1, 0);
+    int pos(0);
+    forup(int, i, 1, k)
     {
-        cout << maxBIT.get(qL, qR) - minBIT.get(qL, qR) << endl;
+        forup(int, j, 1, n) if (c[j].se > taken[i - 1])
+        {
+            if (dp[k - i][n - c[j].se] < m)
+                m -= dp[k - i][n - c[j].se];
+            else
+            {
+                taken[i] = c[j].se;
+                cout << c[j].fi << ' ';
+                break;
+            }
+        }
     }
+    cut;
+    //arr kth
+    ll res(1LL);
+    vector<int> inArrPos(k + 1, 0);
+    forup(int, i, 1, k) forup(int, j, 1, n) if (inArr[i] == c[j].fi) inArrPos[i] = c[j].se;
+    forup(int, i, 1, k) forup(int, j, 1, n)
+    {
+        if (c[j].fi == inArr[i])
+            break;
+        res += c[j].se > inArrPos[i - 1] ? dp[k - i][n - c[j].se] : 0;
+    }
+    cout << res;
     return 0;
 }

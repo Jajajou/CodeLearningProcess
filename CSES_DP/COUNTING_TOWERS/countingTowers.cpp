@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
-#define maxn 101001
+#define name "countingTowers" //pls dont forget your task's name
+#define maxn ll(1e9) + 7
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -25,7 +25,7 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
@@ -36,28 +36,35 @@ typedef pair<int, int> ii;
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
+ll dp[int(1e6) + 1][2];
 
-void read()
+void preCal()
 {
-}
-
-void solve()
-{
-   cout << (1 & (-1));
-   cout << '\n'
-        << getBit(1, 1);
+    dp[1][0] = dp[1][1] = 1LL;
+    forup(int, i, 1, int(1e6))
+    {
+        (dp[i][0] += dp[i - 1][1] + 2 * dp[i - 1][0]) %= maxn;
+        (dp[i][1] += dp[i - 1][0] + 4 * dp[i - 1][1]) %= maxn;
+    }
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    preCal();
+    int n(0);
+    cin >> n;
+    while (cin >> n)
+    {
+        ll res(dp[n][1] + dp[n][0]);
+        res %= maxn;
+        cout << res << endl;
+    }
+    return 0;
 }

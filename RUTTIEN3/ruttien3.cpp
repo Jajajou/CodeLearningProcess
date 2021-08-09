@@ -43,7 +43,21 @@ int main()
     boost();
     Fin(name);
     Fout(name);
-    read();
+    /* read();
     solve(1);
-    cout << res;
+    cout << res; */
+    int n(0), target(0);
+    cin >> target >> n;
+    vector<int> c(n);
+    for (int &v : c)
+        cin >> v;
+    vector<vector<int>> dp(n + 1, vector<int>(target + 1, 0));
+    dp[0][0] = 1;
+    forup(i, 1, n) forup(j, 0, target)
+    {
+        dp[i][j] = dp[i - 1][j];
+        if (j - c[i - 1] >= 0 && dp[i - 1][j - c[i - 1]])
+            dp[i][j] += dp[i - 1][j - c[i - 1]];
+    }
+    cout << dp[n][target];
 }

@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "project" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,7 +25,7 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
@@ -36,28 +36,57 @@ typedef pair<int, int> ii;
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
+}
+struct yes
+{
+    ll a, b, p;
+    bool operator<(const yes &p) { return b < p.b; }
+};
+istream &operator>>(istream &cin, yes &x)
+{
+    ll l, r, c;
+    cin >> l >> r >> c;
+    return x = {l, r, c}, cin;
+}
+ostream &operator<<(ostream &cout, const yes &x)
+{
+    return cout << x.a << x.b << x.p, cout;
 }
 
-void read()
+int check(vector<yes> arr, int pos)
 {
-}
-
-void solve()
-{
-   cout << (1 & (-1));
-   cout << '\n'
-        << getBit(1, 1);
+    fordown(int, i, pos - 1, 0)
+    {
+        if (arr[i].b < arr[pos].a)
+            return i;
+    }
+    return -1;
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0);
+    cin >> n;
+    vector<yes> c(n);
+    for (yes &v : c)
+        cin >> v;
+    sort(c.begin(), c.end());
+    vector<ll> dp(n, 0);
+    dp[0] = c[0].p;
+    forup(int, i, 1, n - 1)
+    {
+        ll tmp = c[i].p;
+        int cp(check(c, i));
+        if (cp != -1)
+            tmp += dp[cp];
+        dp[i] = max(tmp, dp[i - 1]);
+    }
+    cout << dp[n - 1];
+    return 0;
 }
