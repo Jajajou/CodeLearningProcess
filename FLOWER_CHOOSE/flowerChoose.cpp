@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "c11seq" //pls dont forget your task's name
+#define name "flowerChoose" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -30,7 +30,7 @@ val getBit(val x, val pos)
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 
-typedef long long LL;
+typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
 
@@ -39,44 +39,35 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-struct SumIndex : private vector<LL>
+vector<ll> st, dp;
+
+void update(int pos, ll val, int l = 0, int r = dp.size() - 1, int id = 1)
 {
-    SumIndex(const vector<int> &a)
+    if (l == r)
     {
-        set<LL> s;
-        LL sum = 0;
-        s.insert(sum);
-        for (int x : a)
-            sum += x, s.insert(sum);
-        vector<LL>::operator=(vector<LL>(s.begin(), s.end()));
+        dp[pos] = val;
+        st[id] = val;
+        return;
     }
-    int operator()(LL x) const
-    {
-        return upper_bound(begin(), end(), x) - begin();
-    }
-    int size() const
-    {
-        return vector::size();
-    }
-};
-struct Fenwick
+    int mid((r + l) >> 1);
+    if (pos > mid)
+        update(pos, val, mid + 1, r, 2 * id + 1);
+    else
+        update(pos, val, l, mid, 2 * id);
+    st[id] = max(st[2 * id], st[2 * id + 1]);
+}
+
+ll getMaxSum(int qL, int qR, int l = 0, int r = dp.size() - 1, int id = 1)
 {
-    int n, *f;
-    Fenwick(int n) : n(n), f(new int[n + 1]()) {}
-    ~Fenwick() { delete[] f; }
-    void up(int i)
-    {
-        for (; i <= n; i += i & -i)
-            f[i]++;
-    }
-    int sum(int i)
-    {
-        int res = 0;
-        for (; i > 0; i -= i & -i)
-            res += f[i];
-        return res;
-    }
-};
+    if (qR < l || r < qL)
+        return 0;
+    if (l >= qL && r <= qR)
+        return st[id];
+    int mid((r + l) >> 1);
+    ll leftChild(getMaxSum(qL, qR, l, mid, 2 * id)),
+        rightChild(+getMaxSum(qL, qR, mid + 1, r, 2 * id + 1));
+    return max(leftChild, rightChild);
+}
 
 int main()
 {
@@ -84,23 +75,29 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n;
+    int n(0);
     cin >> n;
-    LL l, r;
-    cin >> l >> r;
-    vector<int> a(n);
-    for (int &x : a)
-        cin >> x;
-    SumIndex index(a);
-    LL sum = 0, res = 0;
-    Fenwick f(index.size());
-    f.up(index(sum));
-    for (int x : a)
+    st.resize(4 * n + 10);
+    dp.resize(n);
+    fill(dp.begin(), dp.end(), 0);
+    fill(st.begin(), st.end(), 0);
+    vector<ll> a(n), h(n);
+    for (ll &c : h)
+        cin >> c;
+    for (ll &c : a)
+        cin >> c;
+    forup(int, i, 0, n - 1)
     {
-        sum += x;
-        res += f.sum(index(sum - l)) - f.sum(index(sum - r - 1));
-        f.up(index(sum));
+        if (h[i] == 1)
+        {
+            update(h[i] - 1, a[i]);
+            continue;
+        }
+        update(h[i] - 1, getMaxSum(0, h[i] - 2) + a[i]);
     }
+    ll res(LONG_MIN);
+    for (ll cp : dp)
+        res = max(res, cp);
     cout << res;
     return 0;
 }

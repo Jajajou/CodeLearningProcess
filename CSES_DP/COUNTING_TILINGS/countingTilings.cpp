@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "project" //pls dont forget your task's name
-#define maxn 101001
+#define name "countingTilings" //pls dont forget your task's name
+#define maxn int(1e9) + 7
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -39,7 +39,36 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-map<ll, ll> cnt;
+int dp[1001][1 << 11];
+
+void calState(int i, int currentMask, int nextMask, int line, vector<int> &state)
+{
+    if (i == line + 1)
+        return (void)(state.pb(nextMask));
+    if ((currentMask & (1 << i)))
+        calState(i + 1, currentMask, nextMask, line, state);
+    if ((i - line) && ((currentMask & (1 << i)) == 0) && ((currentMask & (1 << (i + 1))) == 0))
+        calState(i + 2, currentMask, nextMask, line, state);
+    if ((currentMask & (1 << i)) == 0)
+        calState(i + 1, currentMask, nextMask + (1 << i), line, state);
+}
+
+int DP(int i, int currentMask, int line, int collumn)
+{
+    if (i == collumn + 1)
+        if (!currentMask)
+            return 1;
+        else
+            return 0;
+    if (dp[i][currentMask] + 1)
+        return dp[i][currentMask];
+    vector<int> vecState;
+    calState(1, currentMask, 0, line, vecState);
+    int res(0);
+    for (int state : vecState)
+        (res += DP(i + 1, state, line, collumn)) %= maxn;
+    return dp[i][currentMask] = res;
+}
 
 int main()
 {
@@ -47,32 +76,9 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n(0);
-    cin >> n;
-    vector<ll> a(n), b(n), p(n);
-    readVec(a);
-    readVec(b);
-    readVec(p);
-    for (ll aa : a)
-        cnt[aa];
-    for (ll bb : b)
-        cnt[++bb];
-    int m(0);
-    for (auto &k : cnt)
-        k.se = m++;
-    vector<vector<ii>> qp(m);
-    forup(int, i, 0, n - 1)
-    {
-        qp[cnt[b[i]]].emplace_back(ii(cnt[a[i]], p[i]));
-    }
-    vector<ll> dp(m, 0);
-    forup(int, i, 0, m - 1)
-    {
-        if (i)
-            dp[i] = dp[i - 1];
-        for (auto k : qp[i])
-            dp[i] = max(dp[i], dp[k.fi] + k.se);
-    }
-    cout << dp[m - 1];
+    int n(0), m(0);
+    cin >> n >> m;
+    memset(dp, -1, sizeof(dp));
+    cout << DP(1, 0, n, m);
     return 0;
 }

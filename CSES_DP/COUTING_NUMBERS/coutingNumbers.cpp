@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "countingNumbers" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,37 +25,49 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 
-typedef long long LL;
+typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-
-void read()
+ll dp[25][11][2][2];
+ll cal(string &s, int n, int digit, bool preZero, bool tight)
 {
-}
-
-void solve()
-{
-   cout << (1 & 0);
+    if (n == 0)
+        return 1;
+    if (digit != -1 && dp[n][digit][preZero][tight] != -1)
+        return dp[n][digit][preZero][tight];
+    int m(tight ? s[s.size() - n] - '0' : 9);
+    ll res(0);
+    forup(int, i, 0, m) if (i == digit && (!preZero)) continue;
+    else res += cal(s, n - 1, i, preZero & (i == 0), tight & (i == m));
+    return dp[n][digit][preZero][tight] = res;
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    string a, b;
+    ll x, y;
+    cin >> x >> y;
+    a = to_string(x - 1);
+    b = to_string(y);
+    memset(dp, -1, sizeof(dp));
+    ll r(cal(b, b.size(), -1, 1, 1));
+    memset(dp, -1, sizeof(dp));
+    ll l(cal(a, a.size(), -1, 1, 1));
+    cout << r - l;
+    return 0;
 }

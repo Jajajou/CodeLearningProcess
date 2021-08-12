@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "querySum" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,37 +25,67 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 
-typedef long long LL;
+typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-
-void read()
+struct BIT
 {
-}
-
-void solve()
-{
-   cout << (1 & 0);
-}
+    int n;
+    vector<ll> bit;
+    BIT(int n) : n(n), bit(n + 1, 0) {}
+    void update(int pos, ll val)
+    {
+        for (; pos <= n; pos += pos & (-pos))
+            bit[pos] += val;
+    }
+    ll get(int pos)
+    {
+        ll res(0);
+        for (; pos; pos -= pos & (-pos))
+            res += bit[pos];
+        return res;
+    }
+};
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0), q(0);
+    cin >> n >> q;
+    vector<ll> c(n);
+    for (ll &v : c)
+        cin >> v;
+    int i(0);
+    BIT tree(n);
+    for (ll &v : c)
+        tree.update(++i, v);
+    while (q--)
+    {
+        int cp(0), a(0);
+        ll b(0);
+        cin >> cp >> a >> b;
+        if (2 - cp)
+        {
+            tree.update(a, b);
+        }
+        else
+        {
+            cout << tree.get(b) - tree.get(a - 1) << endl;
+        }
+    }
+    return 0;
 }
