@@ -25,38 +25,50 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
-const void maximize(int &a, int b) { a = max(a, b); }
-const void minimize(int &a, int b) { a = min(a, b); }
+
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
+int *tree;
 
-void read()
+void update(int qL, int qR, int val, int start, int end, int id)
 {
-}
-
-void solve()
-{
+    if
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0), q(0);
+    tree = new int[4 * n + 5];
+    cin >> n >> q;
+    while (q--)
+    {
+        int id, x, y, k;
+        cin >> id;
+        if (id)
+        {
+            cin >> x >> y;
+            cout << maxRangeQuery(x, y, 0, n - 1, 1) << endl;
+        }
+        else
+        {
+            cin >> x >> y >> k;
+            update(x, y, k, 0, n - 1, 1);
+        }
+    }
+    return 0;
 }

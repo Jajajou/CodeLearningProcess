@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
+#define name "srmq" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,7 +25,7 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
@@ -38,25 +38,50 @@ typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-
-void read()
+struct BIT
 {
-}
-
-void solve()
-{
-}
+    int n, cp;
+    vector<int> tree, arr;
+    funcc optimal;
+    BIT(int n, int cp, funcc func) : n(n), cp(cp), optimal(func), tree(n + 1, cp), arr(n + 1) {}
+    void update(int val, int pos)
+    {
+        arr[pos] = val;
+        for (; pos <= n; pos += pos & (-pos))
+            optimal(tree[pos], val);
+    }
+    int get(int l, int r)
+    {
+        int res(cp);
+        while (l <= r)
+        {
+            if (r - (r & -r) >= l)
+                optimal(res, tree[r]), r -= r & -r;
+            else
+                optimal(res, arr[r]), r -= 1;
+        }
+        return res;
+    }
+};
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0), k(0);
+    cin >> n >> k;
+    BIT minBIT(n, INT_MAX, minimize);
+    for (int i(1), x(0); i <= n && cin >> x; ++i)
+        minBIT.update(x, i);
+    int qL(0), qR(0);
+    while (cin >> qL >> qR)
+    {
+        cout << minBIT.get(qL, qR) << endl;
+    }
+    return 0;
 }

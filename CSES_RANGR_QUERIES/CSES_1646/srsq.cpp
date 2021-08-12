@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
+#define name "srsq" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,38 +25,61 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
-const void maximize(int &a, int b) { a = max(a, b); }
-const void minimize(int &a, int b) { a = min(a, b); }
+
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-
-void read()
+struct BIT
 {
-}
+    int n;
+    vector<ll> bit;
+    BIT(int n) : n(n), bit(n + 1, 0LL) {}
 
-void solve()
-{
-}
+    void update(int pos, ll val)
+    {
+        for (; pos <= n; pos += pos & (-pos))
+            bit[pos] += val;
+    }
+
+    ll get(int pos)
+    {
+        ll res(0);
+        for (; pos; pos -= pos & (-pos))
+            res += bit[pos];
+        return res;
+    }
+};
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0), q(0);
+    cin >> n >> q;
+    BIT tree(n);
+    vector<ll> c(n);
+    forup(int, i, 0, n - 1)
+    {
+        cin >> c[i];
+        tree.update(i + 1, c[i]);
+    }
+    while (q--)
+    {
+        int l, r;
+        cin >> l >> r;
+        cout << tree.get(r) - tree.get(l - 1) << endl;
+    }
+    return 0;
 }

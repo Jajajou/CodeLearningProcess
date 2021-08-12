@@ -50,20 +50,19 @@ int main()
     int n(0);
     cin >> n;
     vector<ll> a(n), b(n), p(n);
-    readVec(a);
-    readVec(b);
-    readVec(p);
-    for (ll aa : a)
-        cnt[aa];
-    for (ll bb : b)
-        cnt[++bb];
+    forup(int, i, 0, n - 1)
+    {
+        cin >> a[i] >> b[i] >> p[i];
+        cnt[a[i]];
+        cnt[++b[i]];
+    }
     int m(0);
     for (auto &k : cnt)
         k.se = m++;
     vector<vector<ii>> qp(m);
     forup(int, i, 0, n - 1)
     {
-        qp[cnt[b[i]]].emplace_back(ii(cnt[a[i]], p[i]));
+        qp[cnt[b[i]]].pb(ii(cnt[a[i]], p[i]));
     }
     vector<ll> dp(m, 0);
     forup(int, i, 0, m - 1)

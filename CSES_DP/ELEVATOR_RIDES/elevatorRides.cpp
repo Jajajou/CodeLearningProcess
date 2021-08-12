@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
+#define name "elevatorRides" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,38 +25,50 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
-const void maximize(int &a, int b) { a = max(a, b); }
-const void minimize(int &a, int b) { a = min(a, b); }
+
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0), x(0);
+    cin >> n >> x;
+    vector<int> arr(n, 0);
+    for (int &v : arr)
+        cin >> v;
+    ii dp[1 << n];
+    dp[0] = {0, x};
+    forup(int, state, 1, ((1 << n) - 1))
+    {
+        dp[state] = {22, 0};
+        forup(int, i, 0, n - 1) if (getBit(state, i))
+        {
+            ii cp(dp[state ^ (1 << i)]);
+            if (cp.se + arr[i] > x)
+            {
+                ++cp.fi;
+                cp.se = min(cp.se, arr[i]);
+            }
+            else
+                cp.se += arr[i];
+            dp[state] = min(dp[state], cp);
+        }
+    }
+    cout << dp[((1 << n) - 1)].fi;
+    return 0;
 }
