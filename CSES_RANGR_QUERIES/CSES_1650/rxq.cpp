@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
+#define name "rxq" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,19 +25,19 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
@@ -46,25 +46,23 @@ typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0), q(0);
+    cin >> n >> q;
+    vector<ll> a(n + 1, 0);
+    for (int i(1); i <= n && cin >> a[i]; ++i)
+        a[i] ^= a[i - 1];
+    int l(0), r(0);
+    while (cin >> l >> r)
+        cout << (a[r] ^ a[l - 1]) << endl;
+    return 0;
 }
