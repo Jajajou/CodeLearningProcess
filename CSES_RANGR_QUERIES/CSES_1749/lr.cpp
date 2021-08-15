@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "hq" //pls dont forget your task's name
-#define maxn int(2e5)
+#define name "lr" //pls dont forget your task's name
+#define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -49,29 +49,34 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int n(0), q(0);
-ll seg[4 * maxn], h[maxn];
-void buildTree(int start = 1, int end = n, int id = 1)
+struct SEG
 {
-    if (start == end)
-        return (void)(seg[id] = h[start]);
-    int mid((start + end) / 2);
-    buildTree(start, mid, id * 2);
-    buildTree(mid + 1, end, id * 2 + 1);
-    seg[id] = max(seg[id * 2], seg[id * 2 + 1]);
-}
-
-void update(ll val, int start = 1, int end = n, int id = 1)
-{
-    if (start == end)
-        return (void)(seg[id] -= val, cout << start << ' ');
-    int mid((start + end) / 2);
-    if (seg[2 * id] >= val)
-        update(val, start, mid, id * 2);
-    else
-        update(val, mid + 1, end, id * 2 + 1);
-    seg[id] = max(seg[id * 2], seg[id * 2 + 1]);
-}
+    vector<int> tree;
+    int n;
+    SEG(int n) : n(n), tree(4 * n, 0) {}
+    void update(int pos, int val)
+    {
+        tree[pos += n] = val;
+        for (pos /= 2; pos; pos /= 2)
+            tree[pos] = tree[2 * pos] + tree[pos * 2 + 1];
+    }
+    int getPos(int pos)
+    {
+        int k = 1;
+        while (k <= n)
+        {
+            if (tree[2 * k] >= pos)
+                k <<= 1;
+            else
+            {
+                pos -= tree[2 * k];
+                k <<= 1;
+                k++;
+            }
+        }
+        return k - n;
+    }
+};
 
 int main()
 {
@@ -79,17 +84,10 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> q;
-    forup(int, i, 1, n) cin >> h[i];
-    buildTree();
-    while (q--)
-    {
-        ll c;
-        cin >> c;
-        if (c > seg[1])
-            cout << 0 << ' ';
-        else
-            update(c);
-    }
+    int n(0);
+    cin >> n;
+    vector<int> a(n + 1, 0);
+    SEG seg(n);
+    forup(int, i, 1, n) cin >> a[i], seg.update(i, 1);
     return 0;
 }

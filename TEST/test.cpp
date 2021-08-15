@@ -39,14 +39,9 @@ const void IO()
    Fin(name);
    Fout(name);
 }
-
-void read()
-{
-}
-
-void solve()
-{
-   cout << (1 & 0);
+constexpr int bits(int x)
+{ // assert(x >= 0); // make C++11 compatible until USACO updates ...
+   return x == 0 ? 0 : 31 - __builtin_clz(x);
 }
 
 int main()
@@ -55,7 +50,10 @@ int main()
 #ifndef ONLINE_JUDGE
    IO();
 #endif
-   read();
-   solve();
+   vector<pair<int, int>> v;
+   v = {{1, 1}, {2 + 1, 1 + 1}};
+   v = {{3, 3}};
+   for (ii c : v)
+      cout << c.fi << ' ' << c.se << endl;
    return 0;
 }

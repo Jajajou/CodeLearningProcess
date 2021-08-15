@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "hq" //pls dont forget your task's name
-#define maxn int(2e5)
+#define name "easyTask" //pls dont forget your task's name
+#define maxn int(1e6)
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -49,28 +49,15 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int n(0), q(0);
-ll seg[4 * maxn], h[maxn];
-void buildTree(int start = 1, int end = n, int id = 1)
+bool notPrime[maxn];
+void seive()
 {
-    if (start == end)
-        return (void)(seg[id] = h[start]);
-    int mid((start + end) / 2);
-    buildTree(start, mid, id * 2);
-    buildTree(mid + 1, end, id * 2 + 1);
-    seg[id] = max(seg[id * 2], seg[id * 2 + 1]);
-}
-
-void update(ll val, int start = 1, int end = n, int id = 1)
-{
-    if (start == end)
-        return (void)(seg[id] -= val, cout << start << ' ');
-    int mid((start + end) / 2);
-    if (seg[2 * id] >= val)
-        update(val, start, mid, id * 2);
-    else
-        update(val, mid + 1, end, id * 2 + 1);
-    seg[id] = max(seg[id * 2], seg[id * 2 + 1]);
+    notPrime[1] = 1;
+    forup(int, i, 2, int(sqrt(maxn))) if (!notPrime[i])
+    {
+        for (int j(i * i); j <= maxn; j += i)
+            notPrime[j] = 1;
+    }
 }
 
 int main()
@@ -79,17 +66,16 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> q;
-    forup(int, i, 1, n) cin >> h[i];
-    buildTree();
-    while (q--)
-    {
-        ll c;
-        cin >> c;
-        if (c > seg[1])
-            cout << 0 << ' ';
-        else
-            update(c);
-    }
+    seive();
+    int n(0);
+    cin >> n;
+    vector<ll> f(n + 1, 0);
+    for (int i(1), x(0); i <= n && cin >> x; ++i)
+        f[i] = f[i - 1] + (ll)(x);
+    ll minTracker(LONG_MAX), res(LONG_MIN);
+    forup(int, i, 1, n) if (!notPrime[i])
+        minTracker = min(minTracker, f[i - 1]),
+        res = max(res, f[i] - minTracker);
+    cout << res;
     return 0;
 }

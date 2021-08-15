@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "hq" //pls dont forget your task's name
+#define name "p_pvh" //pls dont forget your task's name
 #define maxn int(2e5)
 #define pri_q priority_queue
 #define pf push_front
@@ -49,29 +49,6 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int n(0), q(0);
-ll seg[4 * maxn], h[maxn];
-void buildTree(int start = 1, int end = n, int id = 1)
-{
-    if (start == end)
-        return (void)(seg[id] = h[start]);
-    int mid((start + end) / 2);
-    buildTree(start, mid, id * 2);
-    buildTree(mid + 1, end, id * 2 + 1);
-    seg[id] = max(seg[id * 2], seg[id * 2 + 1]);
-}
-
-void update(ll val, int start = 1, int end = n, int id = 1)
-{
-    if (start == end)
-        return (void)(seg[id] -= val, cout << start << ' ');
-    int mid((start + end) / 2);
-    if (seg[2 * id] >= val)
-        update(val, start, mid, id * 2);
-    else
-        update(val, mid + 1, end, id * 2 + 1);
-    seg[id] = max(seg[id * 2], seg[id * 2 + 1]);
-}
 
 int main()
 {
@@ -79,17 +56,8 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> q;
-    forup(int, i, 1, n) cin >> h[i];
-    buildTree();
-    while (q--)
-    {
-        ll c;
-        cin >> c;
-        if (c > seg[1])
-            cout << 0 << ' ';
-        else
-            update(c);
-    }
+    int t(0);
+    cin >> t;
+    
     return 0;
 }

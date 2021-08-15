@@ -31,10 +31,10 @@ template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 const void maximize(int &a, int b) { a = max(a, b); }
 const void minimize(int &a, int b) { a = min(a, b); }
+typedef const void (*funcc)(int &, int);
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
@@ -75,7 +75,7 @@ int main()
 #endif
     int n(0), k(0);
     cin >> n >> k;
-    BIT minBIT(n, INT_MAX, minimize);
+    BIT minBIT(n, INT_MIN, maximize);
     for (int i(1), x(0); i <= n && cin >> x; ++i)
         minBIT.update(x, i);
     int qL(0), qR(0);
