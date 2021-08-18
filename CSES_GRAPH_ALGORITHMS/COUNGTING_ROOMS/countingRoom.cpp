@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
+#define name "countingRoom" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,47 +25,59 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef tuple<int, int, int> iii;
 typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
+int n(0), m(0), neighborX[4] = {0, 0, 1, -1}, neighborY[4] = {1, -1, 0, 0};
+char f[1001][1001];
+bool visited[1001][1001];
 
-void read()
+bool ok(int x, int y) { return x >= 1 && y >= 1 && x <= n && y <= m && f[x][y] != '#'; }
+void dfs(int x, int y)
 {
-}
-
-void solve()
-{
+    visited[x][y] = 1;
+    forup(int, k, 0, 3)
+    {
+        if (ok(x + neighborX[k], y + neighborY[k]) && !visited[x + neighborX[k]][y + neighborY[k]])
+            dfs(x + neighborX[k], y + neighborY[k]);
+    }
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    cin >> n >> m;
+    forup(int, i, 1, n) forup(int, j, 1, m) cin >> f[i][j];
+    int res(0);
+    forup(int, i, 1, n) forup(int, j, 1, m)
+    {
+        if (f[i][j] == '.' && !visited[i][j])
+            ++res, dfs(i, j);
+    }
+    cout << res;
+    return 0;
 }

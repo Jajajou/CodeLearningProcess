@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
-#define maxn 101001
+#define name "shortestRouteI" //pls dont forget your task's name
+#define maxn int(2e5) + 25
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -25,47 +25,65 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
-typedef pair<int, int> ii;
-typedef tuple<int, int, int> iii;
+typedef pair<ll, ll> ii;
 typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
+int n(0), m(0);
+vector<ii> G[maxn];
+vector<ll> dis(int(1e5) + 15, ll(1e16));
 
-void read()
+void dijkstra()
 {
-}
-
-void solve()
-{
+    pri_q<ii, vector<ii>, greater<ii>> q;
+    q.push({0, 1});
+    dis[1] = 0;
+    while (!q.empty())
+    {
+        ll u(q.top().se), du(q.top().fi);
+        q.pop();
+        if (du != dis[u])
+            continue;
+        for (ii node : G[u])
+        {
+            ll v(node.se), dv(node.fi);
+            if (dis[v] > du + dv)
+                dis[v] = du + dv, q.push({dis[v], v});
+        }
+    }
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    ll u(0), v(0), w(0);
+    cin >> n >> m;
+    while (cin >> u >> v >> w)
+        G[u].pb({w, v});
+    dijkstra();
+    forup(int, i, 1, n) cout << dis[i] << ' ';
+    return 0;
 }

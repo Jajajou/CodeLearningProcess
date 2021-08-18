@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
-#define maxn 101001
+#define name "roundTrip" //pls dont forget your task's name
+#define maxn 100005
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -25,47 +25,66 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef tuple<int, int, int> iii;
 typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
+int n(0), m(0), path[maxn];
+vector<int> G[int(2e5) + 25], res;
 
-void read()
+void dfs(int u, int p)
 {
-}
-
-void solve()
-{
+    for (int v : G[u])
+    {
+        if (v == p)
+            continue;
+        if (path[v])
+        {
+            res.pb(u);
+            while (res.back() != v)
+                res.pb(path[res.back()]);
+            res.pb(u);
+            cout << res.size() << '\n';
+            for (int x : res)
+                cout << x << ' ';
+            exit(0);
+        }
+        path[v] = u;
+        dfs(v, u);
+    }
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    cin >> n >> m;
+    int u(0), v(0);
+    while (cin >> u >> v)
+        G[u].pb(v), G[v].pb(u);
+    forup(int, i, 1, n) if (!path[i]) path[i] = i, dfs(i, -1);
+    cout << "IMPOSSIBLE";
+    return 0;
 }

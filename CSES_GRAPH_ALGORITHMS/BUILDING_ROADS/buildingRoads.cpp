@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
+#define name "buildingRoads" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,47 +25,57 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef tuple<int, int, int> iii;
 typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
+int n(0), m(0);
+vector<int> G[int(2e5) + 25];
+bool visited[maxn];
 
-void read()
+void dfs(int u)
 {
-}
-
-void solve()
-{
+    visited[u] = 1;
+    for (int v : G[u])
+        if (!visited[v])
+            dfs(v);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    cin >> n >> m;
+    int u(0), v(0);
+    while (cin >> u >> v)
+        G[u].pb(v), G[v].pb(u);
+    dfs(1);
+    vector<ii> res;
+    forup(int, i, 2, n) if (!visited[i]) res.pb({i - 1, i}), dfs(i);
+    cout << res.size() << '\n';
+    for (ii c : res)
+        cout << c.fi << ' ' << c.se << '\n';
+    return 0;
 }
