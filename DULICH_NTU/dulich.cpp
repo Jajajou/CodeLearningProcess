@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
-#define maxn 101001
+#define name "dulich" //pls dont forget your task's name
+#define maxn 101
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -25,33 +25,56 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
-
-typedef long long LL;
+template <class val>
+const void maximize(val &a, val b)
+{
+    a = max(a, b);
+}
+template <class val>
+const void minimize(val &a, val b)
+{
+    a = min(a, b);
+}
+typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
+typedef tuple<int, int, int> iii;
+typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-constexpr int bits(int x)
-{ // assert(x >= 0); // make C++11 compatible until USACO updates ...
-   return x == 0 ? 0 : 31 - __builtin_clz(x);
-}
+vector<ii> G[maxn];
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   int i(2);
-   if (i)
-      cout << 10;
-   return 0;
+    int n(0), m(0), u(0), v(0), w(0);
+    cin >> n >> m;
+    vector<int> dis(n + 1, int(1e7));
+    while (cin >> u >> v >> w)
+        G[u].pb({w, v});
+    pri_q<ii, vector<ii>, greater<ii>> q;
+    q.emplace(0, 1);
+    int cnt(0);
+    while (!q.empty())
+    {
+        ii u(q.top());
+        q.pop();
+        if (++cnt >= 3 && u.se == 1)
+            return cout << dis[u.se], 0;
+        for (ii v : G[u.se])
+            if (dis[v.se] > u.fi + v.fi)
+                q.emplace(dis[v.se] = u.fi + v.fi, v.se);
+    }
+    return 0;
 }

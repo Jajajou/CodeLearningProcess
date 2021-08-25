@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "delstr" //pls dont forget your task's name
 #define maxn 101001
 #define pri_q priority_queue
 #define pf push_front
@@ -25,33 +25,55 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
-
-typedef long long LL;
+template <class val>
+const void maximize(val &a, val b)
+{
+    a = max(a, b);
+}
+template <class val>
+const void minimize(val &a, val b)
+{
+    a = min(a, b);
+}
+typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
+typedef tuple<int, int, int> iii;
+typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-constexpr int bits(int x)
-{ // assert(x >= 0); // make C++11 compatible until USACO updates ...
-   return x == 0 ? 0 : 31 - __builtin_clz(x);
+int n(0);
+string s;
+
+int DP(int l, int r, vector<vector<int>> &dp)
+{
+    if (l > r)
+        return 0;
+    if (l == r)
+        return 1;
+    if (dp[l][r])
+        return dp[l][r];
+    int res(1 + DP(l, r - 1, dp));
+    fordown(int, i, r - 1, l) if (s[i] == s[r]) minimize(res, DP(l, i, dp) + DP(i + 1, r - 1, dp));
+    return dp[l][r] = res;
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   int i(2);
-   if (i)
-      cout << 10;
-   return 0;
+    cin >> n >> s;
+    vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
+    cout << DP(0, n - 1, dp);
+    return 0;
 }
