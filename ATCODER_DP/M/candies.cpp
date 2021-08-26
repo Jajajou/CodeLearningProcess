@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "stone" //pls dont forget your task's name
+#define name "candies" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,23 +51,23 @@ const void IO()
     Fin(name);
     Fout(name);
 }
+const int MOD(int(1e9) + 7);
 int n(0), k(0);
-vector<int> dp, a;
+vector<int> candy;
+vector<vector<int>> dp;
 
-int DP(int k)
+int sum(int a, int b)
 {
-    if (dp[k] != -1)
-        return dp[k];
-    if (k == 0)
-        return dp[k] = 0;
-    int &res = dp[k] = 0;
-    for (int c : a)
-        if (c <= k && DP(k - c) == 0)
-        {
-            res = 1;
-            break;
-        }
-    return res;
+    if ((a += b) > MOD)
+        a -= MOD;
+    return a;
+}
+
+int sub(int a, int b)
+{
+    if ((a -= b) < 0)
+        a += MOD;
+    return a;
 }
 
 int main()
@@ -77,10 +77,21 @@ int main()
     IO();
 #endif
     cin >> n >> k;
-    a.resize(n);
-    dp.resize(k + 1, -1);
-    for (int &c : a)
-        cin >> c;
-    cout << (DP(k) ? "First" : "Second");
+    candy.resize(n + 1, 0);
+    forup(int, i, 1, n) cin >> candy[i];
+    dp.resize(n + 1, vector<int>(k + 1, -1));
+    dp[0][0] = 1;
+    forup(int, i, 1, k) dp[0][i] = 0;
+    forup(int, i, 1, n) dp[i][0] = 1;
+    forup(int, cand, 1, n)
+    {
+        vector<int> pref(k + 1, 0);
+        pref[0] = dp[cand - 1][0];
+        forup(int, i, 1, k) pref[i] = sum(pref[i - 1], dp[cand - 1][i]);
+        forup(int, i, 0, k) if (i <= candy[cand]) dp[cand][i] = pref[i];
+        else dp[cand][i] = sub(pref[i], pref[i - candy[cand] - 1]);
+        pref.clear();
+    }
+    cout << dp[n][k];
     return 0;
 }

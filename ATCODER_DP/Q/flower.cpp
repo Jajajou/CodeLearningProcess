@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "stone" //pls dont forget your task's name
+#define name "flower" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,24 +51,24 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int n(0), k(0);
-vector<int> dp, a;
-
-int DP(int k)
+struct BIT
 {
-    if (dp[k] != -1)
-        return dp[k];
-    if (k == 0)
-        return dp[k] = 0;
-    int &res = dp[k] = 0;
-    for (int c : a)
-        if (c <= k && DP(k - c) == 0)
-        {
-            res = 1;
-            break;
-        }
-    return res;
-}
+    int n;
+    vector<ll> tree;
+    BIT(int n) : n(n), tree(n + 1, 0) {}
+    void update(int pos, ll val)
+    {
+        for (; pos <= n; pos += pos & (-pos))
+            maximize(tree[pos], val);
+    }
+    ll get(int pos)
+    {
+        ll res(0);
+        for (; pos; pos -= pos & (-pos))
+            maximize(res, tree[pos]);
+        return res;
+    }
+};
 
 int main()
 {
@@ -76,11 +76,22 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> k;
-    a.resize(n);
-    dp.resize(k + 1, -1);
-    for (int &c : a)
+    int n(0);
+    cin >> n;
+    BIT bit(n);
+    vector<int> h(n, 0), w(n, 0);
+    vector<ll> dp(n + 1, 0);
+    for (int &c : h)
         cin >> c;
-    cout << (DP(k) ? "First" : "Second");
+    for (int &c : w)
+        cin >> c;
+    forup(int, i, 1, n)
+    {
+        dp[i] = bit.get(h[i - 1] - 1) + w[i - 1];
+        bit.update(h[i - 1], dp[i]);
+    }
+    ll res(0);
+    forup(int, i, 1, n) maximize(res, dp[i]);
+    cout << res;
     return 0;
 }

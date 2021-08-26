@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "stone" //pls dont forget your task's name
+#define name "falseMirror" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,23 +51,26 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int n(0), k(0);
-vector<int> dp, a;
+int n, monsters[20], damage[(1 << 20)], dp[(1 << 20)];
 
-int DP(int k)
+int DP(int mask)
 {
-    if (dp[k] != -1)
-        return dp[k];
-    if (k == 0)
-        return dp[k] = 0;
-    int &res = dp[k] = 0;
-    for (int c : a)
-        if (c <= k && DP(k - c) == 0)
-        {
-            res = 1;
-            break;
-        }
-    return res;
+    if (dp[mask] != -1)
+        return dp[mask];
+    int &res = dp[mask];
+    forup(int, i, 0, n - 1)
+    {
+        bool ok(0);
+        forup(int, j, 0, 2) if ((mask & (1 << ((i + j) % n))) == 0) ok = 1;
+        if (!ok)
+            continue;
+        int mask2(mask);
+        forup(int, j, 0, 2) mask2 |= (1 << ((i + j) % n));
+        int k = DP(mask2) + damage[mask2];
+        if (res == -1 || k < res)
+            res = k;
+    }
+    return res != -1 ? res : 0;
 }
 
 int main()
@@ -76,11 +79,14 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> k;
-    a.resize(n);
-    dp.resize(k + 1, -1);
-    for (int &c : a)
-        cin >> c;
-    cout << (DP(k) ? "First" : "Second");
+    cin >> n;
+    forup(int, i, 0, n - 1) cin >> monsters[i];
+    forup(int, mask, 0, (1 << n) - 1)
+    {
+        damage[mask] = 0;
+        forup(int, i, 0, n - 1) if ((mask & (1 << i)) == 0) damage[mask] += monsters[i];
+    }
+    memset(dp, -1, sizeof(dp));
+    cout << DP(0);
     return 0;
 }

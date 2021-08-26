@@ -3,8 +3,10 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
+using namespace std;
 #define name "qbselect" //pls dont forget your task's name
 #define maxn 101001
+#define elif else if
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -22,79 +24,53 @@
 #define allArr(x, start, end) x, x + begin, x + end + begin
 
 template <class val>
-val getBit(val x, val pos) { return x >> (pos - 1) & 1; }
+val getBit(val x, val pos)
+{
+    return x >> pos & 1;
+}
 template <class val>
-val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << (pos - 1)) : inp &= ~(1 << (pos - 1)); }
-
+val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
+template <class val>
+const void maximize(val &a, val b)
+{
+    a = max(a, b);
+}
+template <class val>
+const void minimize(val &a, val b)
+{
+    a = min(a, b);
+}
 typedef long long ll;
 typedef unsigned long long ull;
+typedef pair<int, int> ii;
+typedef tuple<int, int, int> iii;
+typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
     Fin(name);
     Fout(name);
 }
-using namespace std;
 int n(0);
-ll **a, **dp;
+ll ar[4][int(1e4)], dp[int(1e4)][1 << 4];
 
-void read()
+ll sumState(int mask, int col)
 {
-    cin >> n;
-    a = new ll *[5];
-    dp = new ll *[n + 1];
-    for (int i(0); i <= n; ++i)
-        dp[i] = new ll[(1 << 4) + 1];
-    for (int i = 1; i <= 4; ++i)
-    {
-        a[i] = new ll[n + 1];
-        for (int j = 1; j <= n; ++j)
-            cin >> a[i][j];
-    }
-    for (int i(0); i <= n; ++i)
-    {
-        for (int state(0); state <= 16; ++state)
-            dp[i][state] = 0;
-    }
+    ll res(0);
+    forup(int, i, 0, 3) if (getBit(mask, i)) res += ar[i][col];
+    return res;
 }
 
-bool vCheck(int state)
+bool verticalCheck(int mask)
 {
-    forup(int, k, 2, 4) if (getBit(state, k) && getBit(state, k - 1)) return 0;
+    forup(int, i, 1, 3) if (getBit(mask, i) && getBit(mask, i - 1)) return 0;
     return 1;
 }
 
-bool hCheck(int x, int y)
+bool horizontalCheck(int mask1, int mask2)
 {
-    forup(int, k, 1, 4) if (getBit(x, k) && getBit(y, k)) return 0;
+    forup(int, i, 0, 3) if (getBit(mask1, i) && getBit(mask2, i)) return 0;
     return 1;
-}
-
-ll sum(int col, int state)
-{
-    ll s(0);
-    forup(int, k, 1, 4) if (getBit(state, k)) s += a[k][col];
-    return s;
-}
-
-void solve()
-{
-    for (int i(1); i <= n; ++i)
-    {
-        for (int state1(0); state1 <= (1 << 4); ++state1)
-            if (vCheck(state1))
-            {
-                ll maxVal(LONG_MIN);
-                for (int state2(1); state2 <= (1 << 4); ++state2)
-                    if (vCheck(state2) && hCheck(state1, state2))
-                        maxVal = max(maxVal, dp[i - 1][state2]);
-                dp[i][state1] = maxVal + sum(i, state1);
-            }
-    }
-    ll res(LONG_MIN);
-    for (int state(0); state <= 16; ++state)
-        res = max(res, dp[n][state]);
-    cout << res;
 }
 
 int main()
@@ -103,13 +79,20 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    read();
-    solve();
-    for (int i = 1; i <= 4; ++i)
-        delete[] a[i];
-    delete[] a;
-    for (int i = 1; i <= n; ++i)
-        delete[] dp[i];
-    delete[] dp;
+    cin >> n;
+    forup(int, i, 0, 3) forup(int, j, 0, n - 1) cin >> ar[i][j];
+    forup(int, i, 0, n - 1)
+    {
+        forup(int, mask1, 0, (1 << 4) - 1) if (verticalCheck(mask1))
+        {
+            ll k(-ll(1e16));
+            forup(int, mask2, 0, (1 << 4) - 1) if (verticalCheck(mask2) && horizontalCheck(mask1, mask2))
+                maximize(k, i > 0 ? dp[i - 1][mask2] : 0);
+            dp[i][mask1] = k + sumState(mask1, i);
+        }
+    }
+    ll res(-ll(1e16));
+    forup(int, mask, 0, (1 << 4) - 1) maximize(res, dp[n - 1][mask]);
+    cout << res;
     return 0;
 }

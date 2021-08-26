@@ -50,8 +50,9 @@ int main()
 #ifndef ONLINE_JUDGE
    IO();
 #endif
-   int i(2);
-   if (i)
-      cout << 10;
+   int mask(0), i(0);
+   forup(int, j, 0, 2) if ((mask & (1 << ((i + j) % 7))) == 0) cout << (1 << ((i + j) % 7)) << endl;
+   forup(int, j, 0, 2) mask |= (1 << ((i + j) % 7));
+   cout << "mask2: " << mask;
    return 0;
 }

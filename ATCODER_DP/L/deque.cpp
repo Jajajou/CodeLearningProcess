@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "stone" //pls dont forget your task's name
+#define name "deque" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,23 +51,18 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int n(0), k(0);
-vector<int> dp, a;
+int n(0);
+vector<ll> a;
+vector<vector<ll>> dp;
 
-int DP(int k)
+ll DP(int l, int r)
 {
-    if (dp[k] != -1)
-        return dp[k];
-    if (k == 0)
-        return dp[k] = 0;
-    int &res = dp[k] = 0;
-    for (int c : a)
-        if (c <= k && DP(k - c) == 0)
-        {
-            res = 1;
-            break;
-        }
-    return res;
+    if (dp[l][r] != -1)
+        return dp[l][r];
+    if (l == r)
+        return dp[l][r] = a[l];
+    ll &res = dp[l][r] = 0LL;
+    return res = max(a[l] - DP(l + 1, r), a[r] - DP(l, r - 1));
 }
 
 int main()
@@ -76,11 +71,11 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> k;
+    cin >> n;
     a.resize(n);
-    dp.resize(k + 1, -1);
-    for (int &c : a)
+    dp.resize(n, vector<ll>(n, -1));
+    for (ll &c : a)
         cin >> c;
-    cout << (DP(k) ? "First" : "Second");
+    cout << DP(0, n - 1);
     return 0;
 }
