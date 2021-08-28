@@ -93,21 +93,30 @@ ostream &operator<<(ostream &cout, P &a)
 }
 int n(0);
 P arr[4004];
+map<P, bool> s;
 
 void giftWrapping()
 {
-    int start(0), nextStart;
+    int start = 1, p = 1, q, m(0);
+    while (s[arr[start]])
+        ++start;
+    p = start;
     vector<P> hull;
-    // forup(int, i, 1, n)
-    // {
-    //     while (hull.size() >= 2 && arr[hull[hull.size() - 2]].orientation(arr[hull.back()], arr[i]) == 2)
-    //         hull.pop_back();
-    //     hull.pb(i);
-    // }
     do
     {
-        hull.pb(start)
-    } while (start != l);
+        hull.pb(arr[p]);
+        q = p + 1;
+        forup(int, i, 1, n)
+        {
+            if (!s[arr[i]] && arr[p].orientation(arr[i], arr[q]) == 2)
+                q = i;
+        }
+        p = q;
+    } while (p != start);
+    for (P v : hull)
+        s[v] = 1;
+    forup(int, i, 1, n) if (!s[arr[i]]) arr[++m] = arr[i];
+    n = m;
 }
 
 int main()
@@ -120,10 +129,11 @@ int main()
     forup(int, i, 1, n) cin >> arr[i];
     sort(arr + 1, arr + 1 + n);
     int res(0);
-    while (n)
+    while (n > 2)
     {
         ++res;
         giftWrapping();
     }
+    cout << res;
     return 0;
 }
