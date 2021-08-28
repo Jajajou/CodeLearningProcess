@@ -31,3 +31,44 @@ struct P
       return (ll)(x - b.x) * (x - b.x) + (ll)(y - b.y) * (y - b.y);
    }
 };
+
+struct P
+{
+    int x, y;
+    P operator-(const P &b) const
+    {
+        return {x - b.x, y - b.y};
+    }
+    void operator-=(const P &b)
+    {
+        x -= b.x;
+        y -= b.y;
+    }
+    ll operator*(const P &b) const
+    {
+        return (ll)x * b.y - (ll)y * b.x;
+    }
+    bool operator<(const P &b) const
+    {
+        return make_pair(x, y) < make_pair(b.x, b.y);
+    }
+    int orientation(P q, P r)
+    {
+        int val = (q.y - y) * (r.x - q.x) - (q.x - x) * (r.y - q.y);
+        if (val == 0)
+            return 0;             // thang hang
+        return (val > 0) ? 1 : 2; // theo chieu kim dong ho va nguoc lai
+    }
+};
+istream &operator>>(istream &cin, P &a)
+{
+    int _a, _b;
+    cin >> _a >> _b;
+    a = {_a, _b};
+    return cin;
+}
+ostream &operator<<(ostream &cout, P &a)
+{
+    printf("%d %d\n", a.x, a.y);
+    return cout;
+}

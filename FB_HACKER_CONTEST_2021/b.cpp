@@ -4,8 +4,9 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "" //pls dont forget your task's name
 #define maxn 101001
+#define elif else if
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -25,31 +26,39 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
-
-typedef long long LL;
+template <class val>
+const void maximize(val &a, val b)
+{
+    a = max(a, b);
+}
+template <class val>
+const void minimize(val &a, val b)
+{
+    a = min(a, b);
+}
+typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
+typedef tuple<int, int, int> iii;
+typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-constexpr int bits(int x)
-{ // assert(x >= 0); // make C++11 compatible until USACO updates ...
-   return x == 0 ? 0 : 31 - __builtin_clz(x);
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   cout << int('W' - 'A');
-   return 0;
+    read();
+    solve();
+    return 0;
 }
