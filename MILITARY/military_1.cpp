@@ -1,6 +1,7 @@
 /*   __               (\_/)
   ._( .)<(MEOW) (WOOF)('V')
    \____)             (U U)
+   GIFT WRAPPING 
 */
 #include <bits/stdc++.h>
 using namespace std;
@@ -114,9 +115,10 @@ void giftWrapping()
         p = q;
     } while (p != start);
     for (P v : hull)
-        s[v] = 1;
+        cout << v, s[v] = 1;
     forup(int, i, 1, n) if (!s[arr[i]]) arr[++m] = arr[i];
     n = m;
+    printf("\n");
 }
 
 int main()
@@ -134,6 +136,6 @@ int main()
         ++res;
         giftWrapping();
     }
-    cout << res;
+    printf("%d", res);
     return 0;
 }

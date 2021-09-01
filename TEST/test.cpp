@@ -33,6 +33,7 @@ val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : 
 typedef long long LL;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
+typedef tuple<int, int, int> iii;
 
 const void IO()
 {
@@ -50,6 +51,7 @@ int main()
 #ifndef ONLINE_JUDGE
    IO();
 #endif
-   cout << int('W' - 'A');
+   iii a = {1, 2, 3};
+   cout << get<0>(a);
    return 0;
 }
