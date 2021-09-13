@@ -4,8 +4,9 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "trip" //pls dont forget your task's name
 #define maxn 101001
+#define elif else if
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -25,59 +26,56 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
-
-typedef long long LL;
+template <class val>
+const void maximize(val &a, val b)
+{
+    a = max(a, b);
+}
+template <class val>
+const void minimize(val &a, val b)
+{
+    a = min(a, b);
+}
+typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
 typedef tuple<int, int, int> iii;
+typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-constexpr int bits(int x)
-{ // assert(x >= 0); // make C++11 compatible until USACO updates ...
-   return x == 0 ? 0 : 31 - __builtin_clz(x);
-}
-
-void countingSort(vector<int> &arr)
-{
-   int max = *max_element(arr.begin(), arr.end()),
-       min = *min_element(arr.begin(), arr.end()),
-       rangeDiff = max - min + 1;
-   vector<int> count(rangeDiff, 0);
-   vector<int> res(arr.size());
-   for (int v : arr)
-      ++count[v - min];
-   for (int i(1); i < count.size(); ++i)
-      count[i] += count[i - 1];
-   for (int i = arr.size() - 1; i >= 0; --i)
-   {
-      res[count[arr[i] - min] - 1] = arr[i];
-      count[arr[i] - min]--;
-   }
-   return (void)(arr = res);
-}
+int n(0);
+vector<vector<int>> C, dp;
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   vector<int> arr(10);
-   for (int &v : arr)
-      v = -50 + rand() % (50 * 2 + 1);
-   for (int v : arr)
-      cout << v << ' ';
-   cut;
-   countingSort(arr);
-   for (int v : arr)
-      cout << v << ' ';
-   return 0;
+    cin >> n;
+    C.resize(n, vector<int>(n));
+    dp.resize(n, vector<int>(((1 << n) - 1), 0));
+    forup(int, i, 0, n - 1) forup(int, j, 0, n - 1) cin >> C[i][j];
+    function<int(int, int)> DP = [&DP](int i, int mask)
+    {
+        if (mask == 0)
+            return 0;
+        if (dp[i][mask] != 0)
+            return dp[i][mask];
+        int &res = dp[i][mask] = INT_MAX;
+        forup(int, k, 0, n - 1) if (getBit(mask, k)) minimize(res, DP(k, mask ^ (1 << k)) + C[i][k]);
+        return res;
+    };
+    int res(INT_MAX);
+    forup(int, i, 0, n - 1) minimize(res, DP(i, (1 << n) - 1));
+    cout << res;
+    return 0;
 }
