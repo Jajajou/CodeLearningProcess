@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "mixup2" //pls dont forget your task's name
+#define name "zapina" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,9 +51,26 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int n(0), k(0);
-vector<int> G[17];
-vector<vector<ll>> dp;
+
+const ll MOD(1e9 + 7);
+ll exp(ll a, ll b)
+{
+    if (!b)
+        return 1;
+    ll s(exp(a, b / 2));
+    s *= s % MOD;
+    if (b & 1)
+        return ((s % MOD) * a) % MOD;
+    else
+        return (s % MOD);
+}
+
+void add(ll &a, const ll b)
+{
+    a += b;
+    if (a >= MOD)
+        a -= MOD;
+}
 
 int main()
 {
@@ -61,26 +78,24 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> k;
-    vector<int> a(n);
-    for (int &v : a)
-        cin >> v;
-    forup(int, i, 0, n - 1) forup(int, j, 0, n - 1) if (abs(a[i] - a[j]) > k) G[i].pb(j);
-    dp.resize(n, vector<ll>((1 << n), -1));
-    ll res(0);
-    function<ll(int, int)> DP = [&DP](int u, int mask)
+    int n(0);
+    cin >> n;
+    vector<vector<ll>> dp(n + 1, vector<ll>(n + 1, 0)), C(n + 1, vector<ll>(n + 1, 0));
+    C[0][0] = C[1][1] = C[1][0] = 1;
+    forup(int, i, 2, n)
     {
-        if (dp[u][mask] != -1)
-            return dp[u][mask];
-        ll &res = dp[u][mask] = 0LL;
-        if (mask == 0)
-            return res = 1LL;
-        for (int v : G[u])
-            if (getBit(mask, v))
-                res += DP(v, mask ^ (1 << v));
-        return res;
-    };
-    forup(int, i, 0, n - 1) res += DP(i, (1 << n) - 1 ^ (1 << i));
+        C[i][0] = C[i][i] = 1;
+        forup(int, j, 1, i - 1)
+        {
+            add(C[i][j], C[i - 1][j - 1]);
+            add(C[i][j], C[i - 1][j]);
+        }
+    }
+    dp[0][0] = 1;
+    forup(int, i, 1, n) forup(int, j, 0, n) forup(int, k, 0, j) if (i != k) add(dp[i][j], C[j][k] * dp[i - 1][j - k] % MOD);
+    forup(int, i, 1, n) forup(int, j, 1, n) cout << dp[i][j] << " \n"[j == n];
+    ll res(exp(n, n));
+    add(res, MOD - dp[n][n]);
     cout << res;
     return 0;
 }

@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "mixup2" //pls dont forget your task's name
+#define name "qbgame" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,9 +51,26 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int n(0), k(0);
-vector<int> G[17];
-vector<vector<ll>> dp;
+int n(0);
+vector<vector<ll>> dp, ar;
+
+bool verticalCheck(int mask)
+{
+    forup(int, i, 1, 7) if (getBit(mask, i) && getBit(mask, i - 1)) return 0;
+    return 1;
+}
+
+bool horizontalCheck(int mask1, int mask2)
+{
+    return (mask1 & mask2) == 0;
+}
+
+ll sumState(int j, int mask)
+{
+    ll res(0);
+    forup(int, i, 0, 7) if (getBit(mask, i)) res += ar[i][j];
+    return res;
+}
 
 int main()
 {
@@ -61,26 +78,36 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> k;
-    vector<int> a(n);
-    for (int &v : a)
-        cin >> v;
-    forup(int, i, 0, n - 1) forup(int, j, 0, n - 1) if (abs(a[i] - a[j]) > k) G[i].pb(j);
-    dp.resize(n, vector<ll>((1 << n), -1));
-    ll res(0);
-    function<ll(int, int)> DP = [&DP](int u, int mask)
+    ll mx(-ll(1e16));
+    cin >> n;
+    ar.resize(8, vector<ll>(n));
+    forup(int, i, 0, 7) forup(int, j, 0, n - 1) cin >> ar[i][j], maximize(mx, ar[i][j]);
+    if (mx < 0)
+        return cout << mx, 0;
+    vector<int> state;
+    forup(int, mask, 0, (1 << 8) - 1)
     {
-        if (dp[u][mask] != -1)
-            return dp[u][mask];
-        ll &res = dp[u][mask] = 0LL;
-        if (mask == 0)
-            return res = 1LL;
-        for (int v : G[u])
-            if (getBit(mask, v))
-                res += DP(v, mask ^ (1 << v));
-        return res;
-    };
-    forup(int, i, 0, n - 1) res += DP(i, (1 << n) - 1 ^ (1 << i));
+        bool ok(1);
+        for (int i(1); i < 8 && ok; ++i)
+            ok = (mask & 3 << i) != (3 << i);
+        if (ok)
+            state.pb(mask);
+    }
+    dp.resize(n, vector<ll>((1 << 8), 0));
+    for (int mask : state)
+        dp[0][mask] = sumState(0, mask);
+
+    forup(int, i, 1, n - 1) for (int mask1 : state) if (verticalCheck(mask1))
+    {
+        ll maxVal(-ll(1e16));
+        for (int mask2 : state)
+            if (verticalCheck(mask2) && horizontalCheck(mask1, mask2))
+                maximize(maxVal, dp[i - 1][mask2]);
+        dp[i][mask1] = sumState(i, mask1) + maxVal;
+    }
+    ll res(-ll(1e16));
+    for (int mask : state)
+        maximize(res, dp[n - 1][mask]);
     cout << res;
     return 0;
 }

@@ -11,7 +11,7 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "C:\\FPC\\3.2.0\\bin\\i386-win32"
+                "cwd": "${fileDirname}"
             },
             "problemMatcher": [
                 "$gcc"
