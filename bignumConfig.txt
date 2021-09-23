@@ -1,107 +1,150 @@
-const int BASE = 1e9;
-typedef vector<int> big;
+typedef vector<int> bigInt;
+const int BASE = 1000;
+const int LENGTH = 3;
 
-big toBig(int x)
+bigInt &fix(bigInt &a)
 {
-    assert(x < BASE);
-    return big(1, x);
-}
-
-void fix(big &a)
-{
-    a.pb(0);
-    forup(int, i, 0, (int)a.size() - 1)
+    a.push_back(0);
+    for (int i = 0; i + 1 < a.size(); ++i)
     {
         a[i + 1] += a[i] / BASE;
         a[i] %= BASE;
         if (a[i] < 0)
-        {
-            a[i] += BASE;
-            --a[i + 1];
-        }
+            a[i] += BASE, --a[i + 1];
     }
-    while ((int)a.size() > 1 && a.back() == 0)
+    while (a.size() > 1 && a.back() == 0)
         a.pop_back();
+    return a;
 }
 
-big operator*(const big &a, const big &b)
+bigInt big(int x)
 {
-    big c((int)a.size() + (int)b.size() + 1);
-    forup(int, i, 0, (int)a.size() - 1) forup(int, j, 0, (int)b.size() - 1)
+    bigInt res;
+    while (x > 0)
     {
-        c[i + j] = a[i] * b[j];
-        c[i + j + 1] += c[i + j] / BASE;
-        c[i + j] %= BASE;
+        res.push_back(x % BASE);
+        x /= BASE;
     }
-    return fix(c), c;
+    return fix(res), res;
 }
 
-big operator*(big a, const int &b)
+bigInt big(string s)
 {
-    assert(b < BASE);
-    forup(int, i, 0, (int)a.size() - 1) a[i] *= b;
-    return fix(a), a;
+    bigInt res(s.size() / LENGTH + 1);
+    for (int i = 0; i < s.size(); ++i)
+    {
+        int pos = (s.size() - i - 1) / LENGTH;
+        res[pos] = res[pos] * 10 + s[i] - '0';
+    }
+    return fix(res), res;
 }
 
-big operator+(big a, const big &b)
+//compare
+int compare(bigInt &a, bigInt &b)
 {
-    a.resize(max((int)a.size(), (int)b.size()));
-    forup(int, i, 0, (int)b.size() - 1) a[i] += b[i];
-    return fix(a), a;
-}
-
-big operator-(big a, const big &b)
-{
-    forup(int, i, 0, (int)b.size() - 1) a[i] -= b[i];
-    return fix(a), a;
-}
-
-bool operator<(const big &a, const big &b)
-{
-    if ((int)a.size() != (int)b.size())
-        return (int)a.size() < (int)b.size();
-    fordown(int, i, (int)a.size() - 1, 0) if (a[i] != b[i]) return a[i] < b[i];
+    if (a.size() != b.size())
+        return (int)a.size() - (int)b.size();
+    for (int i = 0; i < a.size(); ++i)
+        if (a[i] != b[i])
+            return a[i] - b[i];
     return 0;
 }
+#define DEFINE_OPERATOR(x) \
+    bool operator x(bigInt &a, bigInt &b) { return compare(a, b) x 0; }
+DEFINE_OPERATOR(==)
+DEFINE_OPERATOR(!=)
+DEFINE_OPERATOR(>)
+DEFINE_OPERATOR(<)
+DEFINE_OPERATOR(>=)
+DEFINE_OPERATOR(<=)
+#undef DEFINE_OPERATOR
 
-big operator/(big a, int x)
+void operator+=(bigInt &a, bigInt b)
 {
-    assert(x < BASE);
-    for (int i = (int)a.size() - 1, r = 0; i >= 0; --i, r %= x)
-    {
-        r = r * BASE + a[i];
-        a[i] = r / x;
-    }
-    return fix(a), a;
+    a.resize(max(a.size(), b.size()));
+    for (int i = 0; i < b.size(); ++i)
+        a[i] += b[i];
+    fix(a);
 }
 
-int operator%(const big &a, int x)
+void operator-=(bigInt &a, bigInt b)
 {
+    for (int i = 0; i < b.size(); ++i)
+        a[i] -= b[i];
+    fix(a);
+}
+
+void operator*=(bigInt &a, int b)
+{
+    for (int i = 0; i < a.size(); ++i)
+        a[i] *= b;
+    fix(a);
+}
+
+void divide(bigInt a, int b, bigInt &q, int &r)
+{
+    for (int i = int(a.size()) - 1; i >= 0; --i)
+    {
+        r = r * BASE + a[i];
+        q.push_back(r / b);
+        r %= b;
+    }
+    reverse(q.begin(), q.end());
+    fix(q);
+}
+
+bigInt operator+(bigInt a, bigInt b)
+{
+    a += b;
+    return a;
+}
+bigInt operator-(bigInt a, bigInt b)
+{
+    a -= b;
+    return a;
+}
+bigInt operator*(bigInt a, int b)
+{
+    a *= b;
+    return a;
+}
+
+bigInt operator/(bigInt a, int b)
+{
+    bigInt q;
     int r = 0;
-    for (int i = (int)a.size() - 1; i >= 0; --i)
-        r = (r * BASE + a[i]) % x;
+    divide(a, b, q, r);
+    return q;
+}
+int operator%(bigInt a, int b)
+{
+    bigInt q;
+    int r = 0;
+    divide(a, b, q, r);
     return r;
 }
 
-istream &operator>>(istream &cin, big &a)
+bigInt operator*(bigInt a, bigInt b)
+{
+    bigInt result(a.size() + b.size());
+    for (int i = 0; i < a.size(); ++i)
+        for (int j = 0; j < b.size(); ++j)
+            result[i + j] += a[i] * b[j];
+    return fix(result);
+}
+
+istream &operator>>(istream &cin, bigInt &a)
 {
     string s;
     cin >> s;
-    while (s.size() % 9)
-        s = '0' + s;
-    for (int i = 0; i < (int)s.size(); i += 9)
-    {
-        ll b = 0;
-        forup(int, j, i, i + 9 - 1) b = b * 10 + (s[j] - '0');
-        a.insert(a.begin(), b);
-    }
-    return fix(a), cin;
+    a = big(s);
+    return cin;
 }
 
-ostream &operator<<(ostream &cout, const big &a)
+ostream &operator<<(ostream &cout, const bigInt &a)
 {
-    printf("%d", a.back());
-    for (int i = (int)a.size() - 2; i >= 0; i--)
-        printf("%09d", a[i]);
+    cout << a.back();
+    for (int i = (int)a.size() - 2; i >= 0; --i)
+        cout << setw(LENGTH) << setfill('0') << a[i];
     return cout;
 }

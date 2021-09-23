@@ -3,110 +3,218 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
+using namespace std;
 #define name "bignum" //pls dont forget your task's name
 #define maxn 101001
+#define elif else if
+#define pri_q priority_queue
+#define pf push_front
+#define pb push_back
+#define popb pop_back
+#define popf pop_front
+#define fi first
+#define se second
 #define cut cout << endl
-#define ll long long
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
-#define forup(i, start, end) for (int i = start; i <= end; ++i)
-#define forupIn(i, start, end, in) for (int i = start; i <= end && cin >> in; ++i)
-#define forupChar(i, start, end) for (char i = start; i <= end; ++i)
-#define fordown(i, start, end) for (int i = start; i >= end; --i)
-#define fordownChar(i, start, end) for (char i = start; i >= end; --i)
 #define Fin(name) freopen(name ".inp", "r", stdin)
 #define Fout(name) freopen(name ".out", "w", stdout)
+#define forup(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i <= i##_end; ++i)
+#define fordown(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
+#define allVi(x) x.begin(), x.end()
+#define allArr(x, start, end) x, x + begin, x + end + begin
+
+template <class val>
+val getBit(val x, val pos)
+{
+    return x >> pos & 1;
+}
+template <class val>
+val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
+template <class val>
+const void maximize(val &a, val b)
+{
+    a = max(a, b);
+}
+template <class val>
+const void minimize(val &a, val b)
+{
+    a = min(a, b);
+}
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> ii;
+typedef tuple<int, int, int> iii;
+typedef const void (*funcc)(int &, int);
+
 const void IO()
 {
     Fin(name);
     Fout(name);
 }
-using namespace std;
-typedef string bignum;
-bignum a, b;
+typedef vector<int> bigInt;
+const int BASE = 1000;
+const int LENGTH = 3;
 
-int cmp(bignum x, bignum y)
+bigInt &fix(bigInt &a)
 {
-    while (x.size() < y.size())
-        x = "0" + x;
-    while (x.size() > y.size())
-        y = "0" + y;
-    if (x == y)
-        return 0;
-    if (x > y)
-        return 1;
-    return -1;
-}
-
-bignum sum(bignum x, bignum y)
-{
-    bignum res("");
-    int carry(0), tmp(0);
-    while (x.size() < y.size())
-        x = "0" + x;
-    while (x.size() > y.size())
-        y = "0" + y;
-    fordown(i, x.size() - 1, 0)
+    a.push_back(0);
+    for (int i = 0; i + 1 < a.size(); ++i)
     {
-        tmp = (x[i] - '0') + (y[i] - '0') + carry;
-        carry = tmp / 10;
-        res = to_string(tmp % 10) + res;
+        a[i + 1] += a[i] / BASE;
+        a[i] %= BASE;
+        if (a[i] < 0)
+            a[i] += BASE, --a[i + 1];
     }
-    if (carry)
-        res = '1' + res;
-    return res;
+    while (a.size() > 1 && a.back() == 0)
+        a.pop_back();
+    return a;
 }
 
-bignum minor(bignum x, bignum y)
+bigInt big(int x)
 {
-    bignum res("");
-    bool ok(1);
-    while (x.size() < y.size())
-        x = "0" + x;
-    while (x.size() > y.size())
-        y = "0" + y;
-    if (cmp(y, x))
+    bigInt res;
+    while (x > 0)
     {
-        bignum z = x;
-        x = y;
-        y = z;
-        ok = 0;
+        res.push_back(x % BASE);
+        x /= BASE;
     }
-    int tmp(0), carry(0);
-    fordown(i, x.size() - 1, 0)
+    return fix(res), res;
+}
+
+bigInt big(string s)
+{
+    bigInt res(s.size() / LENGTH + 1);
+    for (int i = 0; i < s.size(); ++i)
     {
-        tmp = (x[i] - '0') - (y[i] - '0') - carry;
-        if (tmp < 0)
-        {
-            tmp += 10;
-            carry = 1;
-        }
-        else
-            carry = 0;
-        res = to_string(tmp) + res;
+        int pos = (s.size() - i - 1) / LENGTH;
+        res[pos] = res[pos] * 10 + s[i] - '0';
     }
-    while (res.size() and res[0] == '0')
-        res.erase(0, 1);
-    if (!ok)
-        res = '-' + res;
-    return res;
+    return fix(res), res;
 }
 
-void read()
+//compare
+int compare(bigInt &a, bigInt &b)
 {
-    cin >> a >> b;
+    if (a.size() != b.size())
+        return (int)a.size() - (int)b.size();
+    for (int i = 0; i < a.size(); ++i)
+        if (a[i] != b[i])
+            return a[i] - b[i];
+    return 0;
+}
+#define DEFINE_OPERATOR(x) \
+    bool operator x(bigInt &a, bigInt &b) { return compare(a, b) x 0; }
+DEFINE_OPERATOR(==)
+DEFINE_OPERATOR(!=)
+DEFINE_OPERATOR(>)
+DEFINE_OPERATOR(<)
+DEFINE_OPERATOR(>=)
+DEFINE_OPERATOR(<=)
+#undef DEFINE_OPERATOR
+
+void operator+=(bigInt &a, bigInt b)
+{
+    a.resize(max(a.size(), b.size()));
+    for (int i = 0; i < b.size(); ++i)
+        a[i] += b[i];
+    fix(a);
 }
 
-void solve()
+void operator-=(bigInt &a, bigInt b)
 {
-    cout << sum(a, b) << endl;
-    cout << minor(a, b);
+    for (int i = 0; i < b.size(); ++i)
+        a[i] -= b[i];
+    fix(a);
+}
+
+void operator*=(bigInt &a, int b)
+{
+    for (int i = 0; i < a.size(); ++i)
+        a[i] *= b;
+    fix(a);
+}
+
+void divide(bigInt a, int b, bigInt &q, int &r)
+{
+    for (int i = int(a.size()) - 1; i >= 0; --i)
+    {
+        r = r * BASE + a[i];
+        q.push_back(r / b);
+        r %= b;
+    }
+    reverse(q.begin(), q.end());
+    fix(q);
+}
+
+bigInt operator+(bigInt a, bigInt b)
+{
+    a += b;
+    return a;
+}
+bigInt operator-(bigInt a, bigInt b)
+{
+    a -= b;
+    return a;
+}
+bigInt operator*(bigInt a, int b)
+{
+    a *= b;
+    return a;
+}
+
+bigInt operator/(bigInt a, int b)
+{
+    bigInt q;
+    int r = 0;
+    divide(a, b, q, r);
+    return q;
+}
+int operator%(bigInt a, int b)
+{
+    bigInt q;
+    int r = 0;
+    divide(a, b, q, r);
+    return r;
+}
+
+bigInt operator*(bigInt a, bigInt b)
+{
+    bigInt result(a.size() + b.size());
+    for (int i = 0; i < a.size(); ++i)
+        for (int j = 0; j < b.size(); ++j)
+            result[i + j] += a[i] * b[j];
+    return fix(result);
+}
+
+istream &operator>>(istream &cin, bigInt &a)
+{
+    string s;
+    cin >> s;
+    a = big(s);
+    return cin;
+}
+
+ostream &operator<<(ostream &cout, const bigInt &a)
+{
+    cout << a.back();
+    for (int i = (int)a.size() - 2; i >= 0; --i)
+        cout << setw(LENGTH) << setfill('0') << a[i];
+    return cout;
 }
 
 int main()
 {
     boost();
+#ifndef ONLINE_JUDGE
     IO();
-    read();
-    solve();
+#endif
+    bigInt a, b;
+    cin >> a >> b;
+    cout << a + b << '\n';
+    if (a < b)
+        cout << '-' << b - a << '\n';
+    else
+        cout << a - b << '\n';
+    cout << a * b;
     return 0;
 }
