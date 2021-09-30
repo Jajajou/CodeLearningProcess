@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
+#define name "fs" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -26,19 +26,19 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
@@ -48,40 +48,50 @@ typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-vector<int> ar, dp;
+int mid(-1);
+ll area;
+vector<ll> S;
 
-int DP(int k)
+int bs(int val, int l = 0, int r = S.size() - 1)
 {
-   if (k == 0)
-      return 0;
-   int &res = dp[k];
-   if (res != -1)
-      return res;
-   res = 0;
-   for (int v : ar)
-      if (v <= k && DP(k - v) == 0)
-      {
-         res = 1;
-         break;
-      }
-   return res;
+    if (r >= l)
+    {
+        int m((l + r) / 2);
+        if (S[m] == val)
+            return mid = S[m];
+        elif (S[m] > val) return bs(val, l, m - 1);
+        else return bs(val, m + 1, r);
+    }
+    return -1;
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   int n(0), k(0);
-   cin >> n >> k;
-   ar.resize(n);
-   dp.resize(k + 1, -1);
-   for (int &v : ar)
-      cin >> v;
-   cout << (DP(k) ? "FIRST" : "SECOND");
-   return 0;
+    cin >> area;
+    for (int i(0); i * i <= int(1e9); ++i)
+        S.pb(i * i);
+    int x(-1), y(-1);
+    for (int cp : S)
+    {
+        mid = -1;
+        int cp2(bs(area - cp));
+        if (cp2 != -1)
+        {
+            x = sqrt(cp), y = sqrt(cp2);
+            return cout << 0 << ' ' << y << '\n'
+                        << x << ' ' << 0 << '\n'
+                        << x << ' ' << x + y << '\n'
+                        << x + y << ' ' << y,
+                   0;
+        }
+    }
+    cout << "Impossible";
+    return 0;
 }

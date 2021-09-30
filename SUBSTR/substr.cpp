@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
-#define maxn 101001
+#define name "substr" //pls dont forget your task's name
+#define maxn 1000111
 #define elif else if
 #define pri_q priority_queue
 #define pf push_front
@@ -26,19 +26,19 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
@@ -48,40 +48,39 @@ typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-vector<int> ar, dp;
+const int base = 131;
+const ll MOD = 1000000007;
+ll POW[maxn], hashT[maxn];
 
-int DP(int k)
+ll getHashT(int i, int j)
 {
-   if (k == 0)
-      return 0;
-   int &res = dp[k];
-   if (res != -1)
-      return res;
-   res = 0;
-   for (int v : ar)
-      if (v <= k && DP(k - v) == 0)
-      {
-         res = 1;
-         break;
-      }
-   return res;
+    return (hashT[j] - hashT[i - 1] * POW[j - i + 1] + MOD * MOD) % MOD;
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   int n(0), k(0);
-   cin >> n >> k;
-   ar.resize(n);
-   dp.resize(k + 1, -1);
-   for (int &v : ar)
-      cin >> v;
-   cout << (DP(k) ? "FIRST" : "SECOND");
-   return 0;
+    string T, P;
+    cin >> T >> P;
+    int lenT = T.size(), lenP = P.size();
+    T = " " + T;
+    P = " " + P;
+    POW[0] = 1;
+    for (int i = 1; i <= lenT; i++)
+        POW[i] = (POW[i - 1] * base) % MOD;
+    for (int i = 1; i <= lenT; i++)
+        hashT[i] = (hashT[i - 1] * base + T[i] - 'a' + 1) % MOD;
+    ll hashP = 0;
+    for (int i = 1; i <= lenP; i++)
+        hashP = (hashP * base + P[i] - 'a' + 1) % MOD;
+    for (int i = 1; i <= lenT - lenP + 1; i++)
+        if (hashP == getHashT(i, i + lenP - 1))
+            printf("%d ", i);
+    return 0;
 }

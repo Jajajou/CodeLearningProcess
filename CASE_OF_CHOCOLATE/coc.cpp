@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "flower" //pls dont forget your task's name
+#define name "coc" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,24 +51,55 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-struct BIT
+struct Tree
 {
-    int n;
-    vector<ll> tree;
-    BIT(int n) : n(n), tree(n + 1, 0) {}
-    void update(int pos, ll val)
-    {
-        for (; pos <= n; pos += pos & (-pos))
-            maximize(tree[pos], val);
-    }
-    ll get(int pos)
-    {
-        ll res(0);
-        for (; pos; pos -= pos & (-pos))
-            maximize(res, tree[pos]);
-        return res;
-    }
+    int m, d;
+    Tree *L, *R;
+    Tree(int _m) : m(_m), d(0), L(0), R(0) {}
 };
+
+void push(Tree *T)
+{
+    T->m = max(T->m, T->d);
+    if (T->L)
+        T->L->d = max(T->L->d, T->d);
+    if (T->R)
+        T->R->d = max(T->R->d, T->d);
+}
+
+int get(Tree *T, int tl, int tr, int i)
+{
+    push(T);
+    int tx = (tl + tr) >> 1;
+    if (T->L && i < tx)
+        return max(get(T->L, tl, tx, i), T->m);
+    if (T->R && i >= tx)
+        return max(get(T->R, tx, tr, i), T->m);
+    return T->m;
+}
+
+void upd(Tree *T, int tl, int tr, int l, int r, int d)
+{
+    push(T);
+    if (r <= tl || tr <= l)
+        return;
+    if (l <= tl && tr <= r)
+    {
+        T->d = d;
+        return;
+    }
+    if (!T->L)
+    {
+        T->L = new Tree(T->m);
+        T->R = new Tree(T->m);
+    }
+    int tx = (tl + tr) >> 1;
+    upd(T->L, tl, tx, l, r, d);
+    upd(T->R, tx, tr, l, r, d);
+}
+int n, q, x, y, z;
+char c;
+Tree *tv, *th;
 
 int main()
 {
@@ -76,20 +107,31 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int n(0);
-    cin >> n;
-    BIT bit(n);
-    vector<int> h(n, 0), w(n, 0);
-    vector<ll> dp(n + 1, 0);
-    for (int &c : h)
-        cin >> c;
-    for (int &c : w)
-        cin >> c;
-    forup(int, i, 1, n)
+
+    scanf("%d %d", &n, &q);
+    tv = new Tree(0);
+    th = new Tree(0);
+
+    for (int qq = 0; qq < q; qq++)
     {
-        dp[i] = bit.get(h[i - 1] - 1) + w[i - 1];
-        bit.update(h[i - 1], dp[i]);
+        scanf("%d %d %c", &x, &y, &c);
+        if (c == 'U')
+        {
+            z = get(tv, 1, n + 1, x);
+            printf("z: %d\n", z);
+            printf("%d\n", y - z);
+            upd(th, 1, n + 1, z + 1, y + 1, x);
+            upd(tv, 1, n + 1, x, x + 1, y);
+        }
+        else
+        {
+            z = get(th, 1, n + 1, y);
+            printf("z: %d\n", z);
+            printf("%d\n", x - z);
+            upd(tv, 1, n + 1, z + 1, x + 1, y);
+            upd(th, 1, n + 1, y, y + 1, x);
+        }
     }
-    cout << *max_element(allVi(dp));
+
     return 0;
 }

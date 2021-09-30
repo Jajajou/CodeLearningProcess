@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" //pls dont forget your task's name
-#define maxn 101001
+#define name "independentSet" //pls dont forget your task's name
+#define maxn int(1e5) + 15
 #define elif else if
 #define pri_q priority_queue
 #define pf push_front
@@ -26,19 +26,19 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
@@ -48,40 +48,41 @@ typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
+    Fin(name);
+    Fout(name);
 }
-vector<int> ar, dp;
+const ll MOD = 1e9 + 7;
+int n(0);
+vector<int> adj[maxn];
+vector<vector<ll>> dp;
 
-int DP(int k)
+ll DP(int u, int color, int cp)
 {
-   if (k == 0)
-      return 0;
-   int &res = dp[k];
-   if (res != -1)
-      return res;
-   res = 0;
-   for (int v : ar)
-      if (v <= k && DP(k - v) == 0)
-      {
-         res = 1;
-         break;
-      }
-   return res;
+    if (dp[u][color] != -1)
+        return dp[u][color];
+    ll &res = dp[u][color] = 1LL;
+    for (int v : adj[u])
+    {
+        if (v == cp)
+            continue;
+        if (color)
+            (res *= DP(v, 0, u)) %= MOD;
+        else
+            (res *= (DP(v, 0, u) + DP(v, 1, u))) %= MOD;
+    }
+    return res;
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   int n(0), k(0);
-   cin >> n >> k;
-   ar.resize(n);
-   dp.resize(k + 1, -1);
-   for (int &v : ar)
-      cin >> v;
-   cout << (DP(k) ? "FIRST" : "SECOND");
-   return 0;
+    cin >> n;
+    dp.resize(n + 1, vector<ll>(2, -1));
+    for (int i(1), u, v; i < n && cin >> u >> v; ++i)
+        adj[u].pb(v), adj[v].pb(u);
+    cout << (DP(1, 0, -1) + DP(1, 1, -1)) % MOD;
+    return 0;
 }
