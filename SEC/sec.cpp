@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "walk" //pls dont forget your task's name
-#define maxn 101001
+#define name "sec" //pls dont forget your task's name
+#define maxn int(5e5) + 55
 #define elif else if
 #define pri_q priority_queue
 #define pf push_front
@@ -51,52 +51,42 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-const ll MOD = 1e9 + 7;
-int n(0);
-ll k(0);
+int m(0), n(0), cnt(0);
+int trie[maxn][2], leaf[maxn], node[maxn];
 
-struct matrix
+void add(int p[], int n)
 {
-    ll mat[50][50];
-    matrix(int id = 0)
+    int u(0);
+    forup(int, i, 0, n)
     {
-        for (int i = 0; i < 50; i++)
+        if (trie[u][p[i]] == 0)
+            trie[u][p[i]] = ++cnt;
+        u = trie[u][p[i]];
+        ++node[u];
+    }
+    ++leaf[u];
+}
+
+int find(int p[], int n)
+{
+    int u(0), res(0);
+    bool ok(1);
+    forup(int, i, 0, n)
+    {
+        if (trie[u][p[i]] == 0)
         {
-            for (int j = 0; j < 50; j++)
-            {
-                mat[i][j] = (id) ? (i == j) : (0);
-            }
+            ok = 0;
+            break;
+        }
+        else
+        {
+            u = trie[u][p[i]];
+            res += leaf[u];
         }
     }
-    matrix operator*(const matrix &other) const
-    {
-        matrix ans;
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                for (int t = 0; t < 50; t++)
-                {
-                    ans.mat[i][j] += mat[i][t] * other.mat[t][j];
-                    if (ans.mat[i][j] > MOD)
-                        ans.mat[i][j] %= MOD;
-                }
-            }
-        }
-        return ans;
-    }
-};
-
-matrix exp(matrix base, ll k)
-{
-    matrix ans(1);
-    for (int i = 0; (1LL << i) <= k; i++)
-    {
-        if ((1LL << i) & k)
-            ans = ans * base;
-        base = base * base;
-    }
-    return ans;
+    if (ok)
+        res += node[u] - leaf[u];
+    return res;
 }
 
 int main()
@@ -105,20 +95,18 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    matrix base;
-    cin >> n >> k;
-    for (int i = 0; i < n; i++)
+    cin >> m >> n;
+    for (int i(0), l; i < m && cin >> l; ++i)
     {
-        for (int j = 0; j < n; j++)
-            cin >> base.mat[i][j];
+        int p[l];
+        forup(int, j, 0, l - 1) cin >> p[j];
+        add(p, l - 1);
     }
-    matrix ans = exp(base, k);
-    ll paths = 0;
-    for (int i = 0; i < n; i++)
+    for (int i(0), l; i < n && cin >> l; ++i)
     {
-        for (int j = 0; j < n; j++)
-            paths = (paths + ans.mat[i][j]) % MOD;
+        int p[l];
+        forup(int, j, 0, l - 1) cin >> p[j];
+        cout << find(p, l - 1) << endl;
     }
-    cout << paths;
     return 0;
 }

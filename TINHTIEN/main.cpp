@@ -3,8 +3,9 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
+#include <fstream>
 using namespace std;
-#define name "walk" //pls dont forget your task's name
+#define name "" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,74 +52,43 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-const ll MOD = 1e9 + 7;
-int n(0);
-ll k(0);
-
-struct matrix
-{
-    ll mat[50][50];
-    matrix(int id = 0)
-    {
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                mat[i][j] = (id) ? (i == j) : (0);
-            }
-        }
-    }
-    matrix operator*(const matrix &other) const
-    {
-        matrix ans;
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                for (int t = 0; t < 50; t++)
-                {
-                    ans.mat[i][j] += mat[i][t] * other.mat[t][j];
-                    if (ans.mat[i][j] > MOD)
-                        ans.mat[i][j] %= MOD;
-                }
-            }
-        }
-        return ans;
-    }
-};
-
-matrix exp(matrix base, ll k)
-{
-    matrix ans(1);
-    for (int i = 0; (1LL << i) <= k; i++)
-    {
-        if ((1LL << i) & k)
-            ans = ans * base;
-        base = base * base;
-    }
-    return ans;
-}
+int n, m, cp(0), c(0);
+string res[maxn], tmp;
+vector<int> a, b, f;
+vector<ii> k, x;
 
 int main()
 {
     boost();
-#ifndef ONLINE_JUDGE
+    /* #ifndef ONLINE_JUDGE
     IO();
-#endif
-    matrix base;
-    cin >> n >> k;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            cin >> base.mat[i][j];
-    }
-    matrix ans = exp(base, k);
-    ll paths = 0;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            paths = (paths + ans.mat[i][j]) % MOD;
-    }
-    cout << paths;
+#endif */
+    ifstream input("D:\\C++\\TINHTIEN\\INP.TXT");
+    fstream output2, output3;
+    output2.open("D:\\C++\\TINHTIEN\\OUT2.TXT", ios::out);
+    output3.open("D:\\C++\\TINHTIEN\\OUT3.TXT", ios::out);
+    //input
+    input >> n >> m;
+    a.resize(n);
+    b.resize(n);
+    f.resize(n);
+    k.resize(m);
+    x.resize(n);
+    forup(int, i, 0, n - 1) input >> a[i] >> b[i];
+    forup(int, i, 0, m - 1) input >> k[i].fi, k[i].se = i;
+    input.close(); //close input
+
+    //screen ouput
+    cout << n << ' ' << m << '\n';
+    forup(int, i, 0, n - 1) cout << a[i] << ' ' << b[i] << '\n';
+    forup(int, i, 0, m - 1) cout << k[i].fi << '\n';
+
+    //output2
+
+    //output3
+
+    //close IO
+    output2.close(); //close ouput2
+    output3.close(); //close ouput3
     return 0;
 }

@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "walk" //pls dont forget your task's name
+#define name "brick" //pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -51,52 +51,23 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-const ll MOD = 1e9 + 7;
-int n(0);
-ll k(0);
+vector<int> lpf;
+vector<int> prime;
+vector<ll> mulPrime;
+bool notPrime[int(1e6) + 17];
 
-struct matrix
+void sieve(int n)
 {
-    ll mat[50][50];
-    matrix(int id = 0)
+    prime.assign(1, 2);
+    lpf.assign(n + 1, 2);
+    for (int x = 3; x <= n; x += 2)
     {
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                mat[i][j] = (id) ? (i == j) : (0);
-            }
-        }
+        if (lpf[x] == 2)
+            prime.push_back(lpf[x] = x);
+        for (int i = 0; i < prime.size() && prime[i] <= lpf[x] && prime[i] * x <= n; ++i)
+            lpf[prime[i] * x] = prime[i];
     }
-    matrix operator*(const matrix &other) const
-    {
-        matrix ans;
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                for (int t = 0; t < 50; t++)
-                {
-                    ans.mat[i][j] += mat[i][t] * other.mat[t][j];
-                    if (ans.mat[i][j] > MOD)
-                        ans.mat[i][j] %= MOD;
-                }
-            }
-        }
-        return ans;
-    }
-};
-
-matrix exp(matrix base, ll k)
-{
-    matrix ans(1);
-    for (int i = 0; (1LL << i) <= k; i++)
-    {
-        if ((1LL << i) & k)
-            ans = ans * base;
-        base = base * base;
-    }
-    return ans;
+    fordown(int, i, prime.size() - 1, 1) mulPrime.pb(1LL * prime[i] * prime[i - 1]);
 }
 
 int main()
@@ -105,20 +76,15 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    matrix base;
-    cin >> n >> k;
-    for (int i = 0; i < n; i++)
+    sieve(1e6 + 16);
+    sort(allVi(mulPrime), greater<ll>());
+    int t(0);
+    cin >> t;
+    while (t--)
     {
-        for (int j = 0; j < n; j++)
-            cin >> base.mat[i][j];
+        ll n;
+        cin >> n;
+        cout << n - *lower_bound(allVi(mulPrime), n, greater<ll>()) << '\n';
     }
-    matrix ans = exp(base, k);
-    ll paths = 0;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            paths = (paths + ans.mat[i][j]) % MOD;
-    }
-    cout << paths;
     return 0;
 }

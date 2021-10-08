@@ -51,23 +51,56 @@ const void IO()
    Fin(name);
    Fout(name);
 }
-vector<int> ar, dp;
-
-int DP(int k)
+struct Point
 {
-   if (k == 0)
-      return 0;
-   int &res = dp[k];
-   if (res != -1)
-      return res;
-   res = 0;
-   for (int v : ar)
-      if (v <= k && DP(k - v) == 0)
-      {
-         res = 1;
-         break;
-      }
-   return res;
+   long long x, y;
+   bool operator<(const Point &v) const { return x == v.x ? y < v.y : x < v.x; }
+   Point operator+(const Point &b) const { return Point{x + b.x, y + b.y}; }
+   Point operator-(const Point &b) const { return Point{x - b.x, y - b.y}; }
+   ll operator*(const Point &b) const { return (ll)x * b.y - (ll)y * b.x; }
+   void operator+=(const Point &b) { x += b.x, y += b.y; }
+   void operator-=(const Point &b) { x -= b.x, y -= b.y; }
+   void operator*=(const int k) { x *= k, y *= k; }
+   ll cross(const Point &b, const Point &c) const
+   {
+      return (b - *this) * (c - *this);
+   }
+} p[maxn], poly[maxn];
+istream &operator>>(istream &cin, Point &p)
+{
+   ll a, b;
+   cin >> a >> b;
+   return p = {a, b}, cin;
+}
+ostream &operator<<(ostream &cout, Point p) { return cout << p.x << ' ' << p.y, cout; }
+int fix(ll x) { return (x > 0) ? 1 : (x == 0 ? 0 : -1); }
+int n(0);
+
+long long size(Point poly[], int k)
+{
+   long long S = (poly[k - 1].x - poly[0].x) * (poly[k - 1].y + poly[0].y);
+   for (int i = 1; i < k; ++i)
+      S += (poly[i - 1].x - poly[i].x) * (poly[i - 1].y + poly[i].y);
+   return abs(S);
+   printf("%lld\n", S);
+}
+
+void convexHull()
+{
+   sort(p, p + n);
+   int k = 0;
+   for (int i = 0; i < n; ++i)
+   {
+      while (k >= 2 && poly[k - 1].cross(poly[k - 2], p[i]) <= 0)
+         --k;
+      poly[k++] = p[i];
+   }
+   for (int i = n - 2, t = k + 1; i >= 0; --i)
+   {
+      while (k >= t && poly[k - 1].cross(poly[k - 2], p[i]) <= 0)
+         --k;
+      poly[k++] = p[i];
+   }
 }
 
 int main()
@@ -76,12 +109,8 @@ int main()
 #ifndef ONLINE_JUDGE
    IO();
 #endif
-   int n(0), k(0);
-   cin >> n >> k;
-   ar.resize(n);
-   dp.resize(k + 1, -1);
-   for (int &v : ar)
-      cin >> v;
-   cout << (DP(k) ? "FIRST" : "SECOND");
+   n = 1;
+   p[0] = {1, 5};
+   convexHull();
    return 0;
 }

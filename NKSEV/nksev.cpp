@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "walk" //pls dont forget your task's name
-#define maxn 101001
+#define name "nksev" //pls dont forget your task's name
+#define maxn int(3e5) + 35
 #define elif else if
 #define pri_q priority_queue
 #define pf push_front
@@ -51,52 +51,20 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-const ll MOD = 1e9 + 7;
-int n(0);
-ll k(0);
+const int MOD = 1337377;
+int trie[maxn][26], dp[maxn], n, cnt, leaf[maxn];
+string s;
 
-struct matrix
+void add(string p, int n)
 {
-    ll mat[50][50];
-    matrix(int id = 0)
+    int u(0);
+    fordown(int, i, n, 1)
     {
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                mat[i][j] = (id) ? (i == j) : (0);
-            }
-        }
+        if (trie[u][p[i] - 'a'] == 0)
+            trie[u][p[i] - 'a'] = ++cnt;
+        u = trie[u][p[i] - 'a'];
     }
-    matrix operator*(const matrix &other) const
-    {
-        matrix ans;
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                for (int t = 0; t < 50; t++)
-                {
-                    ans.mat[i][j] += mat[i][t] * other.mat[t][j];
-                    if (ans.mat[i][j] > MOD)
-                        ans.mat[i][j] %= MOD;
-                }
-            }
-        }
-        return ans;
-    }
-};
-
-matrix exp(matrix base, ll k)
-{
-    matrix ans(1);
-    for (int i = 0; (1LL << i) <= k; i++)
-    {
-        if ((1LL << i) & k)
-            ans = ans * base;
-        base = base * base;
-    }
-    return ans;
+    ++leaf[u];
 }
 
 int main()
@@ -105,20 +73,27 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    matrix base;
-    cin >> n >> k;
-    for (int i = 0; i < n; i++)
+    cin >> s >> n;
+    s = ' ' + s;
+    forup(int, i, 1, n)
     {
-        for (int j = 0; j < n; j++)
-            cin >> base.mat[i][j];
+        string g;
+        cin >> g;
+        g = ' ' + g;
+        add(g, g.size() - 1);
     }
-    matrix ans = exp(base, k);
-    ll paths = 0;
-    for (int i = 0; i < n; i++)
+    dp[0] = 1;
+    forup(int, i, 1, s.size() - 1)
     {
-        for (int j = 0; j < n; j++)
-            paths = (paths + ans.mat[i][j]) % MOD;
+        int u(0);
+        for (int j(i); j && trie[u][s[j] - 'a']; --j)
+        {
+            if (leaf[u = trie[u][s[j] - 'a']])
+            {
+                (dp[i] += dp[j - 1]) %= MOD;
+            }
+        }
     }
-    cout << paths;
+    cout << dp[s.size() - 1];
     return 0;
 }

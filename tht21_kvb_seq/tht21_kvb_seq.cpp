@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "walk" //pls dont forget your task's name
-#define maxn 101001
+#define name "tht21_kvb_seq" //pls dont forget your task's name
+#define maxn int(1e5) + 15
 #define elif else if
 #define pri_q priority_queue
 #define pf push_front
@@ -51,53 +51,9 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-const ll MOD = 1e9 + 7;
 int n(0);
-ll k(0);
-
-struct matrix
-{
-    ll mat[50][50];
-    matrix(int id = 0)
-    {
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                mat[i][j] = (id) ? (i == j) : (0);
-            }
-        }
-    }
-    matrix operator*(const matrix &other) const
-    {
-        matrix ans;
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                for (int t = 0; t < 50; t++)
-                {
-                    ans.mat[i][j] += mat[i][t] * other.mat[t][j];
-                    if (ans.mat[i][j] > MOD)
-                        ans.mat[i][j] %= MOD;
-                }
-            }
-        }
-        return ans;
-    }
-};
-
-matrix exp(matrix base, ll k)
-{
-    matrix ans(1);
-    for (int i = 0; (1LL << i) <= k; i++)
-    {
-        if ((1LL << i) & k)
-            ans = ans * base;
-        base = base * base;
-    }
-    return ans;
-}
+ll ar[maxn], pref1[maxn], pref2[maxn], res(-ll(1e20));
+map<ll, int> pos1, pos2;
 
 int main()
 {
@@ -105,20 +61,18 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    matrix base;
-    cin >> n >> k;
-    for (int i = 0; i < n; i++)
+    cin >> n;
+    forup(int, i, 1, n)
     {
-        for (int j = 0; j < n; j++)
-            cin >> base.mat[i][j];
+        cin >> ar[i];
+        pref1[i] = pref1[i - 1] + ar[i];
+        pos1[ar[i]] = 0;
+        pos2[ar[i]] = n + 1;
     }
-    matrix ans = exp(base, k);
-    ll paths = 0;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            paths = (paths + ans.mat[i][j]) % MOD;
-    }
-    cout << paths;
+    forup(int, i, 1, n) maximize(pos1[ar[i]], i);
+    fordown(int, i, n, 1) minimize(pos2[ar[i]], i), pref2[i] = pref2[i + 1] + ar[i];
+    forup(int, i, 1, n) if (pos1[ar[i]] > i) maximize(res, pref1[pos1[ar[i]]] - pref1[i - 1]);
+    fordown(int, i, n, 1) if (pos2[ar[i]] < i) maximize(res, pref2[pos2[ar[i]]] - pref2[i + 1]);
+    cout << (res != -ll(1e20) ? res : *max_element(ar + 1, ar + n + 1));
     return 0;
 }

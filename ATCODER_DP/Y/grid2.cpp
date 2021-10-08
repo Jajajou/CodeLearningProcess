@@ -4,8 +4,8 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "walk" //pls dont forget your task's name
-#define maxn 101001
+#define name "grid2" //pls dont forget your task's name
+#define maxn int(2e5) + 25
 #define elif else if
 #define pri_q priority_queue
 #define pf push_front
@@ -51,52 +51,36 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-const ll MOD = 1e9 + 7;
-int n(0);
-ll k(0);
+int h(0), w(0), n(0);
+vector<ii> block;
+const ll MOD(1e9 + 7);
+vector<int> arr;
+ll naturalNumInverse[maxn], factNumInverse[maxn], fact[maxn], dp[int(2e5) + 25];
 
-struct matrix
+void inverseOfNumber()
 {
-    ll mat[50][50];
-    matrix(int id = 0)
-    {
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                mat[i][j] = (id) ? (i == j) : (0);
-            }
-        }
-    }
-    matrix operator*(const matrix &other) const
-    {
-        matrix ans;
-        for (int i = 0; i < 50; i++)
-        {
-            for (int j = 0; j < 50; j++)
-            {
-                for (int t = 0; t < 50; t++)
-                {
-                    ans.mat[i][j] += mat[i][t] * other.mat[t][j];
-                    if (ans.mat[i][j] > MOD)
-                        ans.mat[i][j] %= MOD;
-                }
-            }
-        }
-        return ans;
-    }
-};
+    naturalNumInverse[0] = naturalNumInverse[1] = 1;
+    forup(int, i, 2, int(2e5))
+        naturalNumInverse[i] = naturalNumInverse[MOD % i] * (MOD - MOD / i) % MOD;
+}
+void inverseOfFactorial()
+{
+    factNumInverse[0] = factNumInverse[1] = 1;
+    for (int i = 2; i <= int(2e5); i++)
+        factNumInverse[i] = (naturalNumInverse[i] * factNumInverse[i - 1]) % MOD;
+}
 
-matrix exp(matrix base, ll k)
+void factorial()
 {
-    matrix ans(1);
-    for (int i = 0; (1LL << i) <= k; i++)
-    {
-        if ((1LL << i) & k)
-            ans = ans * base;
-        base = base * base;
-    }
-    return ans;
+    fact[0] = 1;
+    for (int i = 1; i <= int(2e5); i++)
+        fact[i] = (fact[i - 1] * i) % MOD;
+}
+
+ll C(int n, int k)
+{
+    ll res = ((fact[n] * factNumInverse[k] % MOD) * (factNumInverse[n - k] % MOD)) % MOD;
+    return res;
 }
 
 int main()
@@ -105,20 +89,24 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    matrix base;
-    cin >> n >> k;
-    for (int i = 0; i < n; i++)
+    inverseOfNumber();
+    inverseOfFactorial();
+    factorial();
+    cin >> h >> w >> n;
+    block.pb({h, w});
+    for (int i(0), u, v; i < n && cin >> u >> v; ++i)
+        block.pb({u, v});
+    sort(allVi(block));
+    forup(int, i, 0, n) dp[i] = C(block[i].fi + block[i].se - 2, block[i].fi - 1) % MOD;
+    forup(int, i, 0, n - 1) forup(int, j, i + 1, n)
     {
-        for (int j = 0; j < n; j++)
-            cin >> base.mat[i][j];
+        int dX(block[j].fi - block[i].fi), dY(block[j].se - block[i].se);
+        if (dX < 0 || dY < 0)
+            continue;
+        (dp[j] -= C(dX + dY, dY) * dp[i]) %= MOD;
     }
-    matrix ans = exp(base, k);
-    ll paths = 0;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            paths = (paths + ans.mat[i][j]) % MOD;
-    }
-    cout << paths;
+    if (dp[n] < 0)
+        dp[n] += MOD;
+    cout << dp[n] % MOD;
     return 0;
 }
