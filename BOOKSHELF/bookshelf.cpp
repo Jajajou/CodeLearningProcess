@@ -4,8 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" //pls dont forget your task's name
-#define trinhChamUrl "D:\\C++\\TEST\\"
+#define name "bookshelf" // pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -27,19 +26,19 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
@@ -49,25 +48,32 @@ typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0), l(0);
+    cin >> n >> l;
+    vector<ll> dp(n + 1, LONG_MAX), h(n + 1, 0LL), w(n + 1, 0LL);
+    forup(int, i, 1, n) cin >> h[i] >> w[i];
+    dp[0] = 0;
+    forup(int, i, 1, n)
+    {
+        ll maxHeight(0), sumLength(0);
+        fordown(int, j, i, 1)
+        {
+            sumLength += w[j];
+            maximize(maxHeight, h[j]);
+            if (sumLength <= l)
+                minimize(dp[i], dp[j - 1] + maxHeight);
+        }
+    }
+    cout << dp[n];
+    return 0;
 }
