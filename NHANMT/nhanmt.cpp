@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" // pls dont forget your task's name
+#define name "nhanmt" // pls dont forget your task's name
 #define trinhChamUrl "D:\\C++\\TEST\\"
 #define maxn 101001
 #define elif else if
@@ -28,19 +28,19 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
@@ -50,25 +50,28 @@ typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0);
+    cin >> n;
+    int a[n + 1], dp[n + 1][n + 1];
+    forup(int, i, 0, n) cin >> a[i];
+    forup(int, i, 1, n) dp[i][i] = 0;
+    forup(int, i, 1, n - 1) dp[i][i + 1] = a[i - 1] * a[i] * a[i + 1];
+    forup(int, x, 2, n - 1) forup(int, i, 1, n - x)
+    {
+        int j(i + x);
+        dp[i][j] = int(3e6);
+        forup(int, k, i, j - 1) minimize(dp[i][j], dp[i][k] + dp[k + 1][j] + a[i - 1] * a[k] * a[j]);
+    }
+    cout << dp[1][n];
+    return 0;
 }

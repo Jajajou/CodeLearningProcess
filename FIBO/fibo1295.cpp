@@ -3,8 +3,8 @@
    \____)             (U U)
 */
 #include <bits/stdc++.h>
-#define name "fibo1295" //pls dont forget your task's name
-#define maxn 1000000007ll
+#define name "fibo1295" // pls dont forget your task's name
+#define maxn 1LL
 #define pri_q priority_queue
 #define pf push_front
 #define pb push_back
@@ -40,11 +40,10 @@ public:
     matrix operator%(const ll &k) { return matrix(res[0][0] % k, res[0][1] % k, res[1][0] % k, res[1][1] % k); }
     matrix operator*(const matrix &m)
     {
-        return matrix(res[0][0] * m.res[0][0] % maxn + res[0][1] * m.res[1][0] % maxn,
-                      res[0][0] * m.res[0][1] % maxn + res[0][1] * m.res[1][1] % maxn,
-                      res[1][0] * m.res[0][0] % maxn + res[1][1] * m.res[1][0] % maxn,
-                      res[1][0] * m.res[0][1] % maxn + res[1][1] * m.res[1][1] % maxn) %
-               maxn;
+        return matrix(res[0][0] * m.res[0][0] + res[0][1] * m.res[1][0],
+                      res[0][0] * m.res[0][1] + res[0][1] * m.res[1][1],
+                      res[1][0] * m.res[0][0] + res[1][1] * m.res[1][0],
+                      res[1][0] * m.res[0][1] + res[1][1] * m.res[1][1]);
     }
     matrix operator^=(const ll &n)
     {

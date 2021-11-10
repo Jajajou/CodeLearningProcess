@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "qbmst" //pls dont forget your task's name
+#define name "qbmst" // pls dont forget your task's name
 #define maxn 101001
 #define elif else if
 #define pri_q priority_queue
@@ -62,21 +62,21 @@ struct DSU
           depth.resize(n + 1, 0);
           forup(int, i, 1, n) root[i] = i;
      }
-     int find(int u)
+     int findRoot(int u)
      {
-          if (root[u] != u)
-               root[u] = find(root[u]);
+          if (u != root[u])
+               root[u] = findRoot(root[u]);
           return root[u];
      }
-     bool merge(int u, int v)
+     bool join(int u, int v)
      {
-          u = find(u);
-          v = find(v);
+          u = findRoot(u);
+          v = findRoot(v);
           if (u == v)
                return 0;
           if (depth[u] == depth[v])
                ++depth[u];
-          if (depth[u] > depth[v])
+          if (depth[u] < depth[v])
                root[v] = u;
           else
                root[u] = v;
@@ -84,7 +84,7 @@ struct DSU
      }
 } dsu;
 int n(0), m(0);
-vector<iii> G;
+vector<iii> adj;
 
 int main()
 {
@@ -94,13 +94,13 @@ int main()
 #endif
      cin >> n >> m;
      dsu.init(n);
-     G.resize(m);
-     for (auto &[w, u, v] : G)
+     adj.resize(m);
+     for (auto &[w, u, v] : adj)
           cin >> u >> v >> w;
-     sort(allVi(G));
+     sort(allVi(adj));
      int res(0);
-     for (auto &[w, u, v] : G)
-          if (dsu.merge(u, v))
+     for (auto [w, u, v] : adj)
+          if (dsu.join(u, v))
                res += w;
      cout << res;
      return 0;

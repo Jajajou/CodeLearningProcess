@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "test" // pls dont forget your task's name
+#define name "spseq" // pls dont forget your task's name
 #define trinhChamUrl "D:\\C++\\TEST\\"
 #define maxn 101001
 #define elif else if
@@ -17,9 +17,9 @@ using namespace std;
 #define se second
 #define cut cout << endl
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
-#define Fin(name) freopen(name ".inp", "r", stdin)
-// #define Fin(name) freopen(trinhChamUrl name ".inp", "r", stdin)
-#define Fout(name) freopen(name ".out", "w", stdout)
+// #define Fin(name) freopen(name ".inp", "r", stdin)
+#define Fin(name) freopen(trinhChamUrl name ".inp", "r", stdin)
+#define Fout(name) freopen("D:\\C++\\SPSEQ\\" name ".out", "w", stdout)
 #define forup(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i <= i##_end; ++i)
 #define fordown(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
 #define allVi(x) x.begin(), x.end()
@@ -53,57 +53,54 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-const int N = (1 << 22) + 5;
-const int S = 2 * N;
-int n;
-int m;
-bool hv[N];
-bool used[S];
-int ans;
-int q[S];
-int topQ;
+int n(0), ar[int(1e5) + 51], lis[int(1e5) + 51], lds[int(1e5) + 51];
 
-void solve(int x)
+namespace DP
 {
-    topQ = 0;
-    q[topQ++] = x;
-    used[x] = 1;
-    for (int it = 0; it < topQ; it++)
+    int val[int(1e5)], len;
+    void LIS()
     {
-        x = q[it];
-        if (x < (1 << n))
+        len = 0;
+        forup(int, i, 1, n + 1) val[i] = int(1e6);
+        val[0] = -1;
+        forup(int, i, 0, n - 1)
         {
-            if (!used[x + (1 << n)])
+            int p = lower_bound(val, val + len, ar[i]) - val;
+            if (p == len)
             {
-                cout << "x + (1 << n): " << x + (1 << n) << ' ' << x << '\n';
-                used[x + (1 << n)] = 1;
-                q[topQ++] = x + (1 << n);
+                ++len;
+                val[p] = ar[i];
             }
-        }
-        else
-        {
-            int y = (1 << (n + 1)) - 1 - x;
-            if (!used[y] && hv[y])
-            {
-                cout << "(1 << (n + 1)) - 1 - x: " << y << ' ' << x << '\n';
-                used[y] = 1;
-                q[topQ++] = y;
-            }
-            for (int i = 0; i < n; i++)
-            {
-                y = x | (1 << i);
-                if (!used[y])
-                {
-                    cout << "x | (1 << i): " << (x | (1 << i)) << ' ' << x << '\n';
-                    used[y] = 1;
-                    q[topQ++] = y;
-                }
-            }
+            else
+                minimize(val[p], ar[i]);
+            lis[i] = len;
         }
     }
+    void LDS()
+    {
+        len = 0;
+        forup(int, i, 1, n + 1) val[i] = int(1e6);
+        val[0] = -1;
+        fordown(int, i, n - 1, 0)
+        {
+            int p = lower_bound(val, val + len, ar[i]) - val;
+            if (p == len)
+            {
+                ++len;
+                val[p] = ar[i];
+            }
+            else
+                minimize(val[p], ar[i]);
+            lds[i] = len;
+        }
+    }
+    void show()
+    {
+        int res(0);
+        forup(int, i, 0, n - 1) maximize(res, 2 * min(lis[i], lds[i]) - 1);
+        cout << res;
+    }
 }
-string s = "0[){})";
-bool check(int i, int j) { return (int(s[j] - s[i]) == 2) || (int(s[j] - s[i]) == 1); }
 
 int main()
 {
@@ -111,10 +108,10 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    int mask((1 << 6) - 1);
-    forup(int, i, 0, 6) if (getBit(mask, i))
-    {
-        cout << (mask ^ (1 << i)) << endl;
-    }
+    cin >> n;
+    forup(int, i, 0, n - 1) cin >> ar[i];
+    DP::LIS();
+    DP::LDS();
+    DP::show();
     return 0;
 }

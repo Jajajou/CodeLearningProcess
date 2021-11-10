@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "palin" // pls dont forget your task's name
+#define name "noel" // pls dont forget your task's name
 #define trinhChamUrl "D:\\C++\\TEST\\"
 #define maxn 101001
 #define elif else if
@@ -17,9 +17,9 @@ using namespace std;
 #define se second
 #define cut cout << endl
 #define boost() ios_base::sync_with_stdio(false), cin.tie(NULL), cout.tie(NULL)
-#define Fin(name) freopen(name ".inp", "r", stdin)
-// #define Fin(name) freopen(trinhChamUrl name ".inp", "r", stdin)
-#define Fout(name) freopen(name ".out", "w", stdout)
+// #define Fin(name) freopen(name ".inp", "r", stdin)
+#define Fin(name) freopen(trinhChamUrl name ".inp", "r", stdin)
+#define Fout(name) freopen("D:\\C++\\NOEL\\" name ".out", "w", stdout)
 #define forup(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i <= i##_end; ++i)
 #define fordown(type, i, start, stop) for (type i = (type)(start), i##_end = static_cast<decltype(i)>(stop); i >= i##_end; --i)
 #define allVi(x) x.begin(), x.end()
@@ -53,8 +53,8 @@ const void IO()
     Fin(name);
     Fout(name);
 }
-int dp[5001][5001], n(0);
-string s(""), res("");
+int n(0), d(0);
+vector<int> a;
 
 int main()
 {
@@ -62,35 +62,45 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
-    cin >> n >> s;
-    s = " " + s;
-    forup(int, k, 1, n - 1) forup(int, i, 1, n - k)
+    cin >> n >> d;
+    a.resize(2 * n);
+    for (int &v : a)
+        cin >> v;
+    int res(0);
+    forup(int, x, 1, 2 * n)
     {
-        int j(i + k);
-        dp[i][j] = s[i] == s[j] ? dp[i + 1][j - 1] : min(dp[i + 1][j], dp[i][j - 1]) + 1;
-    }
-    cout << dp[1][n] << endl;
-    int i(1), j(n), cp[n + 1], k(0);
-    while (dp[i][j])
-    {
-        if (s[i] == s[j])
-            ++i, --j, cp[++k] = 0;
-        else if (dp[i][j] == dp[i + 1][j] + 1)
-            ++i, cp[++k] = 2;
-        else
-            --j, cp[++k] = 1;
-    }
-    forup(int, t, i, j) res += s[t];
-    while (k)
-    {
-        if (cp[k] == 0)
-            res = s[--i] + res + s[++j];
-        if (cp[k] == 1)
-            ++j, res = s[j] + res + s[j];
-        if (cp[k] == 2)
-            --i, res = s[i] + res + s[i];
-        --k;
+        int id[2 * n + 1];
+        bool exist[2 * n + 1];
+        memset(exist, 0, sizeof(exist));
+        forup(int, j, x, 2 * n - 1) id[a[j]] = j, exist[a[j]] = 1;
+        vector<int> b;
+        forup(int, i, 0, x - 1)
+        {
+            vector<int> cp;
+            fordown(int, k, d, -d)
+            {
+                if (a[i] + k <= 0)
+                    continue;
+                if (!exist[a[i] + k])
+                    continue;
+                cp.pb(id[a[i] + k]);
+            }
+            sort(allVi(cp), greater<int>());
+            for (int v : cp)
+                b.pb(v);
+        }
+        int dp[(int)b.size() + 1], cp(0);
+        for (int v : b)
+        {
+            int p(lower_bound(dp, dp + cp, v) - dp);
+            if (p == cp)
+                dp[cp++] = v;
+            else
+                minimize(dp[p], v);
+        }
+        maximize(res, cp);
     }
     cout << res;
+
     return 0;
 }

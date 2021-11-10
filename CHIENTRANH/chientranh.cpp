@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "" // pls dont forget your task's name
+#define name "chientranh" // pls dont forget your task's name
 #define trinhChamUrl "D:\\C++\\TEST\\"
 #define maxn 101001
 #define elif else if
@@ -28,19 +28,19 @@ using namespace std;
 template <class val>
 val getBit(val x, val pos)
 {
-   return x >> pos & 1;
+    return x >> pos & 1;
 }
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
 const void maximize(val &a, val b)
 {
-   a = max(a, b);
+    a = max(a, b);
 }
 template <class val>
 const void minimize(val &a, val b)
 {
-   a = min(a, b);
+    a = min(a, b);
 }
 typedef long long ll;
 typedef unsigned long long ull;
@@ -50,25 +50,26 @@ typedef const void (*funcc)(int &, int);
 
 const void IO()
 {
-   Fin(name);
-   Fout(name);
-}
-
-void read()
-{
-}
-
-void solve()
-{
+    Fin(name);
+    Fout(name);
 }
 
 int main()
 {
-   boost();
+    boost();
 #ifndef ONLINE_JUDGE
-   IO();
+    IO();
 #endif
-   read();
-   solve();
-   return 0;
+    int n(0), m(0), k(0), res(0);
+    cin >> n >> m >> k;
+    vector<int> ar(m + 2, 0);
+    forup(int, i, 1, m + 1) cin >> ar[i];
+    forup(int, i, 1, m)
+    {
+        int mask(ar[i] ^ ar[m + 1]), cnt(0);
+        forup(int, j, 0, n - 1) if (getBit(mask, j))++ cnt;
+        res += (cnt <= k);
+    }
+    cout << res;
+    return 0;
 }
