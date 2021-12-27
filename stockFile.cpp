@@ -33,9 +33,9 @@ val getBit(val x, val pos)
 template <class val>
 val setBitVal(val pos, val x, val &inp) { return (x == 1) ? inp |= (1 << pos) : inp &= ~(1 << pos); }
 template <class val>
-const void maximize(val &a, val b) { return a <= b ? a = b : 0; }
+const val maximize(val &a, val b) { return a <= b ? a = b : 0; }
 template <class val>
-const void minimize(val &a, val b) { return a >= b ? a = b : 0; }
+const val minimize(val &a, val b) { return a >= b ? a = b : 0; }
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
