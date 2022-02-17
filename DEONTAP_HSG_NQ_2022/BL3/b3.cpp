@@ -22,4 +22,21 @@ int main()
 #ifndef ONLINE_JUDGE
     IO();
 #endif
+    int m(0), n(0);
+    cin >> m >> n;
+    vector<int> tables(m), guests(n);
+    for (int i = 0; i < m; ++i)
+        cin >> tables[i];
+    sort(tables.begin(), tables.end());
+    for (int i = 0; i < n; ++i)
+        cin >> guests[i];
+    sort(guests.begin(), guests.end());
+    int j(0), res(0);
+    for (int i = 0; i < n; ++i)
+    {
+        while (guests[i] > tables[j])
+            ++j;
+        res += abs(guests[i] - tables[j++]);
+    }
+    cout << res;
 }
