@@ -39,7 +39,6 @@ const val minimize(val &a, val b) { return a >= b ? a = b : 0; }
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> ii;
-typedef tuple<int, int, int> iii;
 typedef const void (*funcc)(int &, int);
 
 const void IO()

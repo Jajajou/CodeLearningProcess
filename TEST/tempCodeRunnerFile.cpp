@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "110" // pls dont forget your task's name
+#define name "" // pls dont forget your task's name
 #define trinhChamUrl "D:\\C++\\TEST\\"
 #define maxn 101001
 #define elif else if
@@ -49,35 +49,22 @@ const void IO()
 
 int main()
 {
-    cout << abs(0 % 12);
-    string nam[12] = {"DAU",
-                      "TUAT",
-                      "HOI",
-                      "TY'",
-                      "SUU",
-                      "DAN",
-                      "MEO",
-                      "THIN",
-                      "TY.",
-                      "NGO",
-                      "MUI",
-                      "THAN"};
-    int year;
-    cin >> year;
-    if (year > 0)
-    {
-        int n = year % 12;
-        if (n == 0)
-            cout << nam[11] << endl;
-        else
-            cout << nam[n - 1] << endl;
-    }
+    boost();
+    int min1, min2_10, min11, s, res(0), cp(0);
+    cin >> min1 >> min2_10 >> min11 >> s;
+    if (s >= min1)
+        ++res, s -= min1;
     else
+        return cout << res, 0;
+    fordown(int, i, 9, 1) if (i * min2_10 <= s)
     {
-        int n = 12 - abs(year % 12);
-        if (n == 12)
-            cout << nam[0] << endl;
-        else
-            cout << nam[n] << endl;
+        cp = 1, res += i, s -= (i * min2_10);
+        break;
     }
+    if (cp)
+    {
+        while (s >= min11)
+            ++res, s -= min11;
+    }
+    return cout << res, 0;
 }

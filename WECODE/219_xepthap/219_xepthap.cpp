@@ -4,9 +4,9 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "110" // pls dont forget your task's name
+#define name "219_xepthap" // pls dont forget your task's name
 #define trinhChamUrl "D:\\C++\\TEST\\"
-#define maxn 101001
+#define maxn int(1e6) + 16
 #define elif else if
 #define pri_q priority_queue
 #define pf push_front
@@ -46,38 +46,44 @@ const void IO()
     Fin(name);
     Fout(name);
 }
+int n(0);
+struct ringStats
+{
+    int a, b, c;
+    bool taken;
+} ring[maxn];
+
+bool cmp(ringStats &a, ringStats &b)
+{
+    return a.b > b.b;
+}
+
+int bs(int l, int r, int checkPoint)
+{
+    return 0;
+}
+
+void read()
+{
+    cin >> n;
+    forup(int, i, 1, n) cin >> ring[i].a >> ring[i].b >> ring[i].c, ring[i].taken = 0;
+}
+
+void solve()
+{
+    sort(ring + 1, ring + n + 1, cmp);
+    forup(int, i, 1, n) cout << ring[i].a << ring[i].b << ring[i].c << endl;
+}
 
 int main()
 {
-    cout << abs(0 % 12);
-    string nam[12] = {"DAU",
-                      "TUAT",
-                      "HOI",
-                      "TY'",
-                      "SUU",
-                      "DAN",
-                      "MEO",
-                      "THIN",
-                      "TY.",
-                      "NGO",
-                      "MUI",
-                      "THAN"};
-    int year;
-    cin >> year;
-    if (year > 0)
-    {
-        int n = year % 12;
-        if (n == 0)
-            cout << nam[11] << endl;
-        else
-            cout << nam[n - 1] << endl;
-    }
-    else
-    {
-        int n = 12 - abs(year % 12);
-        if (n == 12)
-            cout << nam[0] << endl;
-        else
-            cout << nam[n] << endl;
-    }
+    boost();
+#ifndef ONLINE_JUDGE
+    IO();
+#endif
+    int x(1);
+    cout << ::x;
+    read();
+    solve();
+    return 0;
 }

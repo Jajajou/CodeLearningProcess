@@ -4,7 +4,7 @@
 */
 #include <bits/stdc++.h>
 using namespace std;
-#define name "110" // pls dont forget your task's name
+#define name "prime8" // pls dont forget your task's name
 #define trinhChamUrl "D:\\C++\\TEST\\"
 #define maxn 101001
 #define elif else if
@@ -46,38 +46,28 @@ const void IO()
     Fin(name);
     Fout(name);
 }
+ll n(0), cntPrime(0), prime[int(1e8) + 1];
+bool isPrime[int(1e8) + 1];
+
+void sieve()
+{
+    if (n < 2)
+        return;
+    isPrime[2] = 1, prime[++cntPrime] = 2;
+    if (n < 3)
+        return;
+    isPrime[3] = 1, prime[++cntPrime] = 3;
+}
 
 int main()
 {
-    cout << abs(0 % 12);
-    string nam[12] = {"DAU",
-                      "TUAT",
-                      "HOI",
-                      "TY'",
-                      "SUU",
-                      "DAN",
-                      "MEO",
-                      "THIN",
-                      "TY.",
-                      "NGO",
-                      "MUI",
-                      "THAN"};
-    int year;
-    cin >> year;
-    if (year > 0)
-    {
-        int n = year % 12;
-        if (n == 0)
-            cout << nam[11] << endl;
-        else
-            cout << nam[n - 1] << endl;
-    }
-    else
-    {
-        int n = 12 - abs(year % 12);
-        if (n == 12)
-            cout << nam[0] << endl;
-        else
-            cout << nam[n] << endl;
-    }
+    boost();
+#ifndef ONLINE_JUDGE
+    IO();
+#endif
+    cin >> n;
+    memset(isPrime, 0, sizeof(isPrime));
+    sieve();
+    cout << cntPrime;
+    return 0;
 }
